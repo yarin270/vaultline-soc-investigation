@@ -1,0 +1,2 @@
+index="vaultline" (sourcetype="backup" OR sourcetype="cloudaudit")
+| stats count(eval(sourcetype="backup")) as supplied_backup_events count(eval(sourcetype="backup" AND status="SUCCESS")) as successful_backup_events count(eval(sourcetype="backup" AND status!="SUCCESS")) as other_backup_status_events count(eval(sourcetype="cloudaudit" AND operation="delete_object")) as delete_events min(_time) as first_seen max(_time) as last_seen by sourcetype

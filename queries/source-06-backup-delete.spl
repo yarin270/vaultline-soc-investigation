@@ -1,0 +1,1 @@
+index="vaultline" (sourcetype="backup" OR sourcetype="cloudaudit") | stats count(eval(status="SUCCESS")) as successful_backups count(eval(operation="delete_object")) as delete_operations

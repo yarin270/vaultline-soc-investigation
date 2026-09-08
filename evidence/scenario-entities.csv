@@ -1,0 +1,8 @@
+entity,type,case_role,boundary
+31.154.88.203,IP,Associated external source,Ownership unknown; simulation only
+212.117.55.9,IP,Morning user baseline and comparison rotation,Not a malicious indicator
+r.zohar,account,Implicated user identity,Personal operator unknown
+svc_archsync,account,Implicated service identity,Current key state unknown
+WKS-ENG-01,host,Network logon source,Compromise not proven
+SRV-BUILD,host,Network logon destination,Compromise not proven
+/internal/config/archsync-runtime.yaml,object,Retrieved by r.zohar,Content and use unknown

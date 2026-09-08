@@ -1,0 +1,1 @@
+index="vaultline" sourcetype="winevent" actor="svc_archsync" EventCode=4624 logon_type=3 src_host="WKS-ENG-01" host="SRV-BUILD" | eval time_utc=strftime(strptime(_time,"%Y-%m-%d %H:%M:%S")-10800,"%Y-%m-%d %H:%M:%S") | table time_utc actor src_host host logon_type

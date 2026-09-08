@@ -1,0 +1,19 @@
+{
+  "provenance": "Source-reported findings and arithmetic derived from S1/S2; not raw telemetry or fresh query output",
+  "dataset_scope_approximate_logs": 50000,
+  "retrieval_events": 271,
+  "customer_retrieval_events": 270,
+  "customer_namespaces": 24,
+  "internal_retrieval_events": 1,
+  "customer_bytes_per_retrieval": 43745037,
+  "internal_bytes": 8140,
+  "total_bytes": 11811168130,
+  "total_GiB_rounded": 11.0,
+  "total_GB_rounded": 11.81,
+  "service_customer_retrieval_events": 111,
+  "user_customer_retrieval_events_derived": 159,
+  "service_bytes_derived": 4855699107,
+  "user_bytes_derived": 6955469023,
+  "reported_successful_backup_jobs": 103,
+  "reported_delete_object_events": 0
+}

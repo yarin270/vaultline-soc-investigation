@@ -1,0 +1,1 @@
+index="vaultline" sourcetype="vpn" user="r.zohar" src_ip="31.154.88.203" | table _time user src_ip src_country result mfa session_min

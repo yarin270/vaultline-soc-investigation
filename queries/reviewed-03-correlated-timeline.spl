@@ -1,0 +1,4 @@
+index="vaultline" ((sourcetype="cloudaudit" src_ip="31.154.88.203") OR (sourcetype="vpn" user="r.zohar" src_ip="31.154.88.203") OR (sourcetype="winevent" actor="svc_archsync" EventCode=4624 logon_type=3 src_host="WKS-ENG-01" host="SRV-BUILD"))
+| eval identity=coalesce(actor,user)
+| sort 0 _time
+| table _time sourcetype identity src_ip src_host host EventCode logon_type operation target_object result mfa session_min

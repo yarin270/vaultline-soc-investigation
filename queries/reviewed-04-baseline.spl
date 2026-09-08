@@ -1,0 +1,5 @@
+index="vaultline" sourcetype="cloudaudit" actor IN ("r.zohar","svc_archsync")
+| eval event_bytes=tonumber(bytes_out), utc_hour=strftime(_time,"%H")
+| eval target_class=case(match(target_object,"^/internal/config/pipeline-[^/]+\.yaml$"),"pipeline_config",match(target_object,"^/cust-[0-9]{3}/record-[0-9]{4}\.dat$"),"customer_record",target_object="/internal/config/archsync-runtime.yaml","archsync_config",true(),"other")
+| stats count as events count(event_bytes) as numeric_byte_events min(_time) as first_seen max(_time) as last_seen min(event_bytes) as min_bytes max(event_bytes) as max_bytes values(utc_hour) as hours by actor src_ip operation target_class
+| sort 0 first_seen

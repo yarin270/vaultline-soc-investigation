@@ -1,0 +1,6 @@
+index="vaultline" sourcetype="cloudaudit" src_ip="31.154.88.203" operation="get_object"
+| eval event_bytes=tonumber(bytes_out)
+| rex field=target_object "^/(?<namespace>[^/]+)/"
+| eval scope=case(match(namespace,"^cust-[0-9]{3}$"),"customer",namespace="internal","internal",true(),"other")
+| stats count as retrieval_events count(event_bytes) as numeric_byte_events sum(event_bytes) as total_bytes dc(target_object) as observed_distinct_paths dc(namespace) as namespaces count(eval(scope="customer")) as customer_events count(eval(scope="internal")) as internal_events count(eval(scope="other")) as other_events dc(eval(if(scope="customer",namespace,null()))) as customer_namespaces
+| eval total_GiB=round(total_bytes/pow(1024,3),2), total_GB=round(total_bytes/pow(1000,3),2)

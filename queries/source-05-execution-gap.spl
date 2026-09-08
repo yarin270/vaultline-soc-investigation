@@ -1,0 +1,1 @@
+index="vaultline" sourcetype="winevent" (actor="svc_archsync" OR target_account="svc_archsync") EventCode IN (4688,4697,7045,4698,4699,4702) | table _time EventCode host actor target_account process cmdline object_name

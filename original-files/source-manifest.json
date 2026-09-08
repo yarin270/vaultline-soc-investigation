@@ -1,0 +1,23 @@
+[
+  {
+    "source_id": "S1",
+    "file": "Vaultline-Investigation-Report-HE.docx",
+    "description": "Supplied updated Hebrew report",
+    "bytes": 836901,
+    "sha256": "01e40eb2bd10fcfb350125d9208259f995c516fe6647d7d0b76b149adfcd25a9"
+  },
+  {
+    "source_id": "S2",
+    "file": "Vaultline-Case.html",
+    "description": "Full 26-slide HTML deck with notes",
+    "bytes": 108897,
+    "sha256": "0228a9a43b7b0d45c199f2151e473b6783e061ab2b1ed84553afa1b291c3d0b1"
+  },
+  {
+    "source_id": "S3",
+    "file": "Vaultline-Team-E-Script-HE.docx",
+    "description": "Hebrew speaker script and 24-minute schedule",
+    "bytes": 19607,
+    "sha256": "423290784ba9840a1fe904ed67b8ff2d1f28d039402aa7d5ad5c5c204a67a5d9"
+  }
+]

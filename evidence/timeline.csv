@@ -1,0 +1,13 @@
+time_utc,source_family,account,source_ip,source_host,destination_host,source_reported_observation,source_evidence_id,original_windows_time
+2026-08-27 00:30:00,Cloud Audit,svc_archsync,10.90.4.11,,,Internal replication baseline,VL-E01,
+2026-08-30 08:00:00,Cloud Audit,a.perl,212.117.55.9,,,Key rotation begins; revoke then create within 08:00–08:03,IA-E15,
+2026-09-09 21:00:00,Cloud Audit,r.zohar,31.154.88.203,,,First observed anomalous customer retrieval,IA-E02/IA-E22,
+2026-09-09 21:40:01,VPN,r.zohar,31.154.88.203,,,Successful TOTP authentication; session 195 minutes,IA-E01,
+2026-09-24 21:24:00,Cloud Audit,r.zohar,31.154.88.203,,,Internal archsync-runtime.yaml retrieval; 8140 bytes,VL-E03,
+2026-09-26 19:30:00,Windows Event,svc_archsync,,WKS-ENG-01,SRV-BUILD,4624 Type 3 network logon,IA-E08,2026-09-26 22:30:00 UTC+3
+2026-09-26 21:00:00,Cloud Audit,svc_archsync,31.154.88.203,,,First observed external service-account retrieval,IA-E06/IA-E07,
+2026-10-27 20:36:00,Windows Event,svc_archsync,,WKS-ENG-01,SRV-BUILD,4624 Type 3 network logon,IA-E09,2026-10-27 23:36:00 UTC+3
+2026-10-27 22:09:00,Cloud Audit,svc_archsync,31.154.88.203,,,create_access_key; no matching revoke reported,IA-E14,
+2026-11-19 21:48:00,Cloud Audit,svc_archsync,31.154.88.203,,,Last reported service-account retrieval,VL-E04,
+2026-11-21 22:06:00,Cloud Audit,r.zohar,31.154.88.203,,,Last reported suspicious retrieval overall,VL-E05,
+2026-11-24 11:58:39,File Audit,,,,,Latest reported source coverage,VL-E06,

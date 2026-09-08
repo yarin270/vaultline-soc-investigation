@@ -1,0 +1,1386 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Vaultline Case File — Team E — Revised</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&amp;family=IBM+Plex+Mono:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<style>
+/* ===========================================
+   THEME — "Case File" (refined)
+   One restrained accent (amber/rust) is reserved
+   exclusively for the anomalous thread: the external
+   IP 31.154.88.203, the files it pulled, and the
+   unrevoked key it created. Evidentiary status
+   (PROVEN / HYPOTHESIS / UNKNOWN) is carried by
+   border-style + a grayscale ramp, never by hue —
+   so color only ever means one thing in this deck.
+   Chapter identity (who is presenting) is carried by
+   the doc-eyebrow label and the chapter-divider
+   slides, never by re-purposing the accent color.
+   =========================================== */
+:root{
+  --bg:#0a0a09;
+  --panel:#131311;
+  --panel-2:#171714;
+  --line:#2b2b26;
+  --line-soft:#1b1b18;
+
+  --paper:#e9e5db;
+  --paper-dim:#9c9789;
+  --paper-faint:#5c584c;
+
+  --accent:#cd7a37;
+  --accent-dim:rgba(205,122,55,0.10);
+  --accent-line:rgba(205,122,55,0.5);
+
+  --font-display:'IBM Plex Sans',sans-serif;
+  --font-mono:'IBM Plex Mono',monospace;
+
+  --ease:cubic-bezier(0.16,1,0.3,1);
+}
+
+*{margin:0;padding:0;box-sizing:border-box;}
+
+/* ===========================================
+   FIXED 16:9 STAGE — mandatory base (viewport-base.css)
+   =========================================== */
+html,body{width:100%;height:100%;margin:0;overflow:hidden;background:var(--stage-bg,#000);}
+.deck-viewport{position:fixed;inset:0;overflow:hidden;background:var(--stage-bg,#000);}
+.deck-stage{position:absolute;left:0;top:0;width:1920px;height:1080px;overflow:hidden;transform-origin:0 0;background:var(--slide-bg,#fff);}
+.slide{position:absolute;inset:0;width:1920px;height:1080px;overflow:hidden;display:block;visibility:hidden;opacity:0;pointer-events:none;background:var(--slide-bg,#fff);}
+.slide.active,.slide.visible{visibility:visible;opacity:1;pointer-events:auto;z-index:1;}
+img,video,canvas,svg{max-width:100%;max-height:100%;}
+.deck-controls{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);z-index:1000;}
+@media print{
+  html,body{width:1920px;height:auto;overflow:visible;background:#fff;}
+  .deck-viewport{position:static;overflow:visible;background:#fff;}
+  .deck-stage{position:static;width:auto;height:auto;transform:none!important;background:none;}
+  .slide{position:relative;display:block!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important;width:1920px;height:1080px;break-after:page;page-break-after:always;}
+  .slide:last-child{break-after:auto;page-break-after:auto;}
+  .deck-controls,.notes-drawer,.notes-toggle,.edit-toggle,.edit-hint,.edit-hotzone{display:none!important;}
+}
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation-duration:0.01ms!important;transition-duration:0.2s!important;}
+}
+
+/* ===========================================
+   SLIDE BASE — plain ink ground, no decoration
+   =========================================== */
+.slide{background-color:var(--bg);color:var(--paper);font-family:var(--font-display);}
+
+/* ===========================================
+   DOCUMENT HEADER / FOOTER — report chrome, not app chrome
+   =========================================== */
+.doc-header{position:absolute;top:64px;left:100px;right:100px;z-index:4;display:flex;justify-content:space-between;align-items:baseline;}
+.doc-eyebrow{font-family:var(--font-mono);font-size:15px;letter-spacing:0.16em;text-transform:uppercase;color:var(--paper-faint);padding-bottom:16px;border-bottom:1px solid var(--line);flex:1;}
+.doc-eyebrow b{color:var(--accent);font-weight:500;}
+.doc-eyebrow .ch{color:var(--paper-dim);}
+.doc-footer{position:absolute;bottom:52px;left:100px;right:100px;display:flex;justify-content:space-between;align-items:center;padding-top:18px;border-top:1px solid var(--line);z-index:4;}
+.legend{display:flex;gap:22px;font-family:var(--font-mono);font-size:12px;letter-spacing:0.04em;color:var(--paper-faint);}
+.legend span{display:inline-flex;align-items:center;gap:7px;}
+.legend .sw{width:10px;height:10px;border-radius:2px;flex:none;}
+.legend .sw.proven{border:1.4px solid var(--paper-dim);}
+.legend .sw.hypothesis{border:1.4px dashed var(--paper-dim);}
+.legend .sw.unknown{border:1.2px dotted var(--paper-faint);}
+.pageref{font-family:var(--font-mono);font-size:12px;color:var(--paper-faint);letter-spacing:0.05em;}
+.pageref b{color:var(--paper-dim);}
+
+/* ===========================================
+   CONTENT REGION
+   =========================================== */
+.content{position:absolute;top:148px;left:100px;right:100px;bottom:112px;z-index:4;}
+
+/* ===========================================
+   TYPOGRAPHY
+   =========================================== */
+.kicker{font-family:var(--font-mono);font-size:15px;letter-spacing:0.2em;text-transform:uppercase;color:var(--paper-faint);margin-bottom:22px;}
+.kicker b{color:var(--accent);font-weight:500;}
+h2.headline{font-family:var(--font-display);font-weight:700;font-size:50px;line-height:1.16;color:var(--paper);max-width:1560px;text-wrap:balance;}
+h2.headline i{font-style:normal;color:var(--accent);}
+.lead{font-family:var(--font-display);font-weight:400;font-size:22px;line-height:1.65;color:var(--paper-dim);max-width:1180px;margin-top:22px;}
+.lead b{color:var(--paper);font-weight:600;}
+.lead .acc{color:var(--accent);font-weight:600;font-family:var(--font-mono);}
+
+/* ===========================================
+   MONO DATA — every timestamp, IP, hostname, account
+   =========================================== */
+.mono{font-family:var(--font-mono);}
+.acc{color:var(--accent);}
+
+/* ===========================================
+   EVIDENCE TAGS — the deck's spine.
+   Grayscale only. Border style carries the state.
+   =========================================== */
+.tag{display:inline-flex;align-items:center;gap:8px;font-family:var(--font-mono);font-size:13px;letter-spacing:0.08em;text-transform:uppercase;padding:7px 14px;border-radius:3px;white-space:nowrap;}
+.tag.proven{border:1.5px solid var(--paper-dim);color:var(--paper);}
+.tag.hypothesis{border:1.5px dashed var(--paper-dim);color:var(--paper-dim);}
+.tag.unknown{border:1px dotted var(--paper-faint);color:var(--paper-faint);}
+.tag.outside{border:1px dotted var(--paper-faint);color:var(--paper-faint);font-style:italic;}
+
+/* ===========================================
+   PANELS
+   =========================================== */
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:6px;}
+.panel-2{background:var(--panel-2);border:1px solid var(--line);border-radius:6px;}
+
+/* ===========================================
+   TABLES
+   =========================================== */
+table.data{width:100%;border-collapse:collapse;}
+table.data th{text-align:left;font-family:var(--font-mono);font-size:13px;letter-spacing:0.1em;text-transform:uppercase;color:var(--paper-faint);padding:0 22px 14px 0;border-bottom:1px solid var(--line);}
+table.data td{padding:16px 22px 16px 0;border-bottom:1px solid var(--line-soft);vertical-align:top;font-family:var(--font-display);font-size:18px;color:var(--paper);}
+table.data td.mono{font-family:var(--font-mono);font-size:16px;color:var(--paper-dim);}
+
+/* ===========================================
+   REVEAL ANIMATION — one settle, no flourish
+   =========================================== */
+.reveal{opacity:0;transform:translateY(16px);transition:opacity 0.5s var(--ease), transform 0.5s var(--ease);}
+.slide.visible .reveal{opacity:1;transform:translateY(0);}
+.reveal.d1{transition-delay:0.04s;} .reveal.d2{transition-delay:0.1s;} .reveal.d3{transition-delay:0.16s;}
+.reveal.d4{transition-delay:0.22s;} .reveal.d5{transition-delay:0.28s;} .reveal.d6{transition-delay:0.34s;}
+.reveal.d7{transition-delay:0.4s;} .reveal.d8{transition-delay:0.46s;}
+
+/* ===========================================
+   DECK CONTROLS
+   =========================================== */
+.deck-controls{display:flex;gap:9px;align-items:center;background:rgba(19,19,17,0.9);border:1px solid var(--line);backdrop-filter:blur(6px);padding:10px 16px;border-radius:4px;}
+.dot-nav{width:7px;height:7px;border-radius:50%;background:var(--line);cursor:pointer;transition:all 0.25s var(--ease);border:none;padding:0;}
+.dot-nav.chapter-start{margin-left:14px;}
+.dot-nav.active{background:var(--accent);width:20px;border-radius:3px;}
+.nav-count{font-family:var(--font-mono);font-size:12px;color:var(--paper-faint);margin-left:6px;letter-spacing:0.05em;}
+
+/* ===========================================
+   SPEAKER NOTES DRAWER
+   =========================================== */
+.notes-content{display:none;}
+.notes-toggle{position:fixed;top:16px;right:16px;z-index:10001;font-family:var(--font-mono);font-size:12px;letter-spacing:0.06em;color:var(--paper-dim);background:var(--panel);border:1px solid var(--line);padding:9px 15px;border-radius:6px;cursor:pointer;}
+.notes-toggle:hover{color:var(--paper);}
+.notes-toggle.active{background:var(--accent-dim);border-color:var(--accent-line);color:var(--accent);}
+.notes-drawer{position:fixed;left:0;right:0;bottom:0;max-height:44%;background:rgba(9,9,8,0.98);border-top:2px solid var(--accent-line);z-index:9999;transform:translateY(100%);transition:transform 0.32s var(--ease);overflow-y:auto;}
+.notes-drawer.open{transform:translateY(0);}
+.notes-inner{padding:28px 100px 40px;max-width:1720px;margin:0 auto;}
+.notes-head{font-family:var(--font-mono);font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:var(--paper-faint);display:flex;justify-content:space-between;gap:20px;padding-bottom:14px;border-bottom:1px solid var(--line);}
+.notes-head b{color:var(--accent);}
+.notes-body{font-family:var(--font-display);font-size:17px;line-height:1.7;color:var(--paper-dim);margin-top:16px;}
+.notes-body ul{padding-left:22px;}
+.notes-body li{margin-bottom:10px;}
+.notes-body li b{color:var(--paper);}
+.notes-body li .mono{color:var(--paper-dim);font-size:15px;}
+
+/* ===========================================
+   EDIT MODE
+   =========================================== */
+.edit-hotzone{position:fixed;top:0;left:0;width:80px;height:80px;z-index:10000;cursor:pointer;}
+.edit-toggle{position:fixed;top:16px;left:16px;z-index:10001;width:40px;height:40px;border-radius:6px;background:var(--panel);border:1px solid var(--line);color:var(--paper);font-size:17px;display:flex;align-items:center;justify-content:center;cursor:pointer;opacity:0;pointer-events:none;transition:opacity 0.3s ease;}
+.edit-toggle.show,.edit-toggle.active{opacity:1;pointer-events:auto;}
+.edit-toggle.active{background:var(--accent-dim);border-color:var(--accent-line);color:var(--accent);}
+body.edit-mode .slide.active [contenteditable="true"]{outline:1px dashed var(--accent-line);outline-offset:4px;border-radius:2px;cursor:text;}
+.edit-hint{position:fixed;top:24px;left:66px;z-index:10001;font-family:var(--font-mono);font-size:12px;color:var(--paper-dim);background:var(--panel);border:1px solid var(--line);padding:8px 12px;border-radius:6px;opacity:0;pointer-events:none;transition:opacity 0.3s ease;}
+body.edit-mode .edit-hint{opacity:1;}
+
+/* =====================================================================
+   SLIDE-SPECIFIC LAYOUTS
+   ===================================================================== */
+
+/* --- 01 TITLE --- */
+.title-slide{display:flex;flex-direction:column;}
+.masthead{position:absolute;top:80px;left:120px;right:120px;display:flex;justify-content:space-between;align-items:flex-end;border-bottom:1px solid var(--line);padding-bottom:20px;z-index:4;}
+.masthead-left{font-family:var(--font-mono);font-size:15px;letter-spacing:0.22em;text-transform:uppercase;color:var(--paper-faint);}
+.masthead-left b{color:var(--paper-dim);}
+.masthead-right{font-family:var(--font-mono);font-size:14px;color:var(--paper-faint);text-align:right;line-height:1.6;}
+.title-h1{position:absolute;top:200px;left:120px;font-family:var(--font-display);font-weight:700;font-size:104px;line-height:1.02;letter-spacing:-0.01em;color:var(--paper);width:1500px;z-index:4;text-wrap:balance;}
+.title-dek{position:absolute;top:424px;left:120px;width:1260px;font-family:var(--font-display);font-size:22px;line-height:1.7;color:var(--paper-dim);z-index:4;}
+.title-legend{position:absolute;top:534px;left:120px;z-index:4;}
+.title-legend .cap{font-family:var(--font-mono);font-size:13px;letter-spacing:0.1em;text-transform:uppercase;color:var(--paper-faint);margin-bottom:16px;}
+.title-legend .row{display:flex;gap:16px;}
+.title-team{position:absolute;top:660px;left:120px;right:120px;display:flex;gap:0;border-top:1px solid var(--line);z-index:4;}
+.title-team .who{flex:1;padding:22px 30px 0 0;border-right:1px solid var(--line-soft);}
+.title-team .who:last-child{border-right:none;}
+.title-team .ch{font-family:var(--font-mono);font-size:12px;letter-spacing:0.14em;color:var(--accent);margin-bottom:8px;}
+.title-team .role{font-family:var(--font-mono);font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:var(--paper-faint);margin-bottom:8px;}
+.title-team .name{font-family:var(--font-display);font-weight:600;font-size:23px;color:var(--paper);}
+.title-footer{position:absolute;bottom:64px;left:120px;right:120px;display:flex;justify-content:space-between;font-family:var(--font-mono);font-size:14px;color:var(--paper-faint);z-index:4;}
+
+/* --- CHAPTER DIVIDER --- */
+.chapter-slide{position:relative;}
+.chapter-bg-grid{position:absolute;inset:0;background-image:linear-gradient(var(--line-soft) 1px, transparent 1px),linear-gradient(90deg, var(--line-soft) 1px, transparent 1px);background-size:64px 64px;opacity:0.4;z-index:1;pointer-events:none;}
+.chapter-num{position:absolute;top:96px;left:90px;font-family:var(--font-mono);font-weight:700;font-size:240px;line-height:1;color:transparent;-webkit-text-stroke:1.5px var(--line);z-index:2;letter-spacing:-0.02em;}
+.chapter-main{position:absolute;left:100px;top:352px;z-index:4;max-width:900px;}
+.chapter-role{font-family:var(--font-mono);font-size:16px;letter-spacing:0.22em;text-transform:uppercase;color:var(--accent);margin-bottom:18px;}
+.chapter-name{font-family:var(--font-display);font-weight:700;font-size:92px;color:var(--paper);line-height:1;}
+.chapter-scope{font-family:var(--font-display);font-size:20px;color:var(--paper-dim);margin-top:26px;line-height:1.65;}
+.chapter-term{position:absolute;right:100px;top:352px;width:600px;background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:26px 30px;z-index:4;}
+.chapter-term .line{font-family:var(--font-mono);font-size:14px;color:var(--paper-dim);line-height:2.1;white-space:pre-wrap;}
+.chapter-term .line .prompt{color:var(--accent);}
+.chapter-term .line.status{color:var(--paper);}
+.chapter-index{position:absolute;left:100px;right:100px;bottom:120px;z-index:4;display:flex;gap:0;border-top:1px solid var(--line);padding-top:22px;}
+.chapter-index .item{flex:1;padding-right:24px;}
+.chapter-index .item .no{font-family:var(--font-mono);font-size:12px;color:var(--paper-faint);}
+.chapter-index .item .t{font-family:var(--font-display);font-size:15px;color:var(--paper-dim);margin-top:4px;line-height:1.4;}
+
+/* --- FULL-VISUAL HEADER --- */
+.moment-header{position:absolute;top:148px;left:100px;right:100px;z-index:4;}
+.moment-header .kicker{margin-bottom:12px;}
+.moment-header h2.headline{font-size:44px;}
+.moment-canvas{position:absolute;top:296px;left:100px;right:100px;bottom:112px;z-index:4;}
+
+/* --- BASELINE COMPARISON (r.zohar / svc_archsync) --- */
+.bl-cols{display:flex;gap:30px;}
+.bl-col{flex:1;background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:30px 34px;}
+.bl-col h3{font-family:var(--font-display);font-weight:700;font-size:23px;color:var(--paper);margin-bottom:4px;}
+.bl-col .sub{font-family:var(--font-mono);font-size:13px;color:var(--paper-faint);margin-bottom:22px;}
+.bl-row{display:flex;padding:12px 0;border-top:1px solid var(--line-soft);}
+.bl-row:first-of-type{border-top:none;}
+.bl-row .k{width:130px;flex:none;font-family:var(--font-mono);font-size:12px;letter-spacing:0.06em;text-transform:uppercase;color:var(--paper-faint);}
+.bl-row .v{font-family:var(--font-mono);font-size:16px;color:var(--paper);line-height:1.5;}
+.bl-foot{margin-top:18px;padding-top:16px;border-top:1px solid var(--line);}
+
+/* --- LAYERED BASELINE (behavioural break) --- */
+.lb-wrap{position:relative;width:1720px;margin:0 auto;}
+.lb-axis-row{position:relative;height:32px;margin-left:300px;border-bottom:1px solid var(--line);}
+.lb-hour{position:absolute;top:0;font-family:var(--font-mono);font-size:12px;color:var(--paper-faint);}
+.lb-lane{position:relative;height:104px;display:flex;align-items:center;border-bottom:1px solid var(--line-soft);}
+.lb-lane-title{width:300px;flex:none;padding-right:20px;}
+.lb-lane-title .name{font-family:var(--font-mono);font-size:14px;text-transform:uppercase;letter-spacing:0.05em;color:var(--paper);}
+.lb-lane-title .sub{font-family:var(--font-mono);font-size:13px;color:var(--paper-faint);margin-top:6px;line-height:1.5;}
+.lb-track{position:relative;flex:1;height:100%;}
+.lb-tick{position:absolute;top:50%;transform:translate(-50%,-50%);width:11px;height:11px;border-radius:50%;}
+.lb-tick.base{background:var(--bg);border:2px solid var(--paper-dim);}
+.lb-tick.anom{background:var(--accent);box-shadow:0 0 0 4px var(--accent-dim);}
+.lb-band{position:absolute;top:16%;bottom:16%;background:var(--accent-dim);border-left:1px solid var(--accent-line);border-right:1px solid var(--accent-line);border-radius:4px;}
+.lb-tag-time{position:absolute;top:-25px;transform:translateX(-50%);font-family:var(--font-mono);font-size:12px;color:var(--paper-faint);white-space:nowrap;}
+.lb-tag-time.acc{color:var(--accent);}
+.lb-note{margin-top:30px;background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:24px 32px;display:flex;gap:24px;align-items:center;}
+.lb-note p{font-family:var(--font-display);font-size:19px;line-height:1.55;color:var(--paper);flex:1;}
+.lb-repeat{margin-top:18px;display:flex;align-items:center;gap:14px;padding-left:300px;}
+.lb-repeat .label{font-family:var(--font-mono);font-size:12px;color:var(--paper-faint);letter-spacing:0.05em;}
+.lb-repeat .days{display:flex;gap:3px;flex-wrap:wrap;max-width:1200px;}
+.lb-repeat .d{width:8px;height:8px;border-radius:1px;background:var(--accent);opacity:0.5;}
+
+/* --- 40-MINUTE GAP TIMELINE --- */
+.tl-wrap{position:relative;width:1720px;height:480px;margin:0 auto;}
+.tl-axis{position:absolute;left:110px;right:60px;top:170px;height:2px;background:var(--line);}
+.tl-lane-label{position:absolute;left:0;top:60px;font-family:var(--font-mono);font-size:14px;letter-spacing:0.06em;text-transform:uppercase;color:var(--paper-faint);width:280px;}
+.tl-lane-label b{color:var(--accent);}
+.tl-tick{position:absolute;width:2px;height:14px;background:var(--paper-faint);top:163px;opacity:0.5;}
+.tl-node{position:absolute;top:150px;transform:translateX(-50%);text-align:center;}
+.tl-node .dot{width:18px;height:18px;border-radius:50%;margin:0 auto 14px;}
+.tl-node.anom .dot{background:var(--accent);box-shadow:0 0 0 5px var(--accent-dim);}
+.tl-node .time{font-family:var(--font-mono);font-weight:600;font-size:21px;color:var(--paper);}
+.tl-node .label{font-family:var(--font-mono);font-size:13px;color:var(--paper-dim);margin-top:6px;max-width:300px;line-height:1.5;}
+.tl-gap-bracket{position:absolute;top:170px;height:52px;border-left:1.5px dotted var(--paper-faint);border-right:1.5px dotted var(--paper-faint);border-top:1.5px dotted var(--paper-faint);border-bottom:none;border-radius:6px 6px 0 0;}
+.tl-gap-label{position:absolute;top:198px;transform:translateX(-50%);font-family:var(--font-mono);font-weight:600;font-size:18px;color:var(--paper);text-align:center;white-space:nowrap;}
+.tl-callout{position:absolute;left:0;right:0;top:340px;background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:26px 34px;display:flex;align-items:center;gap:26px;}
+.tl-callout p{font-family:var(--font-display);font-size:20px;line-height:1.55;color:var(--paper);flex:1;}
+.tl-callout p b{color:var(--paper);}
+
+/* --- REVOKE / HYPOTHESIS COMPARISON (2-column) --- */
+.rv-cols{display:flex;gap:32px;}
+.rv-col{flex:1;background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:32px;}
+.rv-col h3{font-family:var(--font-display);font-weight:700;font-size:24px;margin-bottom:6px;color:var(--paper);}
+.rv-col .sub{font-family:var(--font-mono);font-size:13px;color:var(--paper-faint);margin-bottom:26px;}
+.rv-step{display:flex;align-items:center;gap:18px;padding:16px 0;border-top:1px solid var(--line-soft);}
+.rv-step:first-of-type{border-top:none;}
+.rv-step .n{font-family:var(--font-mono);font-size:13px;color:var(--paper-faint);width:56px;flex:none;}
+.rv-step .op{font-family:var(--font-mono);font-weight:600;font-size:18px;color:var(--paper);}
+.rv-step .op.acc{color:var(--accent);}
+.rv-step .meta{font-family:var(--font-mono);font-size:13px;color:var(--paper-faint);margin-top:4px;}
+.rv-result{margin-top:20px;padding-top:20px;border-top:1px solid var(--line);display:flex;align-items:center;gap:14px;}
+.rv-synth{margin-top:26px;background:var(--panel-2);border:1px solid var(--line);border-radius:8px;padding:22px 30px;}
+.rv-synth p{font-family:var(--font-display);font-size:20px;line-height:1.5;color:var(--paper);text-align:center;}
+.rv-synth p b{color:var(--paper);}
+.rv-col p.txt{font-family:var(--font-display);font-size:16px;line-height:1.65;color:var(--paper-dim);}
+.rv-col p.txt b{color:var(--paper);}
+
+/* --- CENTERPIECE TIMELINE --- */
+.ct-wrap{position:relative;width:1760px;height:660px;margin:0 auto;}
+.ct-spine{position:absolute;left:40px;right:40px;top:330px;height:2px;background:var(--line);}
+.ct-baseline-note{position:absolute;left:0;top:308px;width:150px;font-family:var(--font-mono);font-size:11px;color:var(--paper-faint);line-height:1.5;text-align:right;padding-right:16px;border-right:1px dotted var(--line);}
+.ct-node{position:absolute;top:330px;transform:translateX(-50%);width:150px;text-align:center;}
+.ct-node .stem{position:absolute;left:50%;width:1px;background:var(--line-soft);}
+.ct-node .dot{position:absolute;left:50%;transform:translate(-50%,-50%);width:13px;height:13px;border-radius:50%;top:0;}
+.ct-node.base .dot{background:var(--bg);border:2px solid var(--paper-dim);}
+.ct-node.anom .dot{background:var(--accent);box-shadow:0 0 0 4px var(--accent-dim);}
+.ct-node.boundary .dot{background:var(--bg);border:2px dotted var(--paper-faint);}
+.ct-node .card{position:absolute;left:50%;transform:translateX(-50%);width:230px;}
+.ct-node.up .card{bottom:22px;}
+.ct-node.down .card{top:22px;}
+.ct-node.up .stem{bottom:13px;height:30px;}
+.ct-node.down .stem{top:13px;height:30px;}
+.ct-node .t{font-family:var(--font-mono);font-weight:600;font-size:15px;color:var(--paper);}
+.ct-node .d{font-family:var(--font-mono);font-size:12px;color:var(--paper);margin-top:2px;}
+.ct-node .l{font-family:var(--font-display);font-size:13px;color:var(--paper-dim);line-height:1.4;margin-top:6px;}
+.ct-node .tagmini{display:inline-block;margin-top:8px;font-family:var(--font-mono);font-size:10px;letter-spacing:0.08em;text-transform:uppercase;padding:3px 8px;border-radius:2px;color:var(--paper-faint);}
+.ct-node .tagmini.proven{border:1px solid var(--paper-dim);color:var(--paper-dim);}
+.ct-node .tagmini.hypothesis{border:1px dashed var(--paper-dim);}
+.ct-node .tagmini.unknown{border:1px dotted var(--paper-faint);}
+.ct-caption{position:absolute;bottom:0;left:0;right:0;text-align:center;font-family:var(--font-mono);font-size:12px;color:var(--paper-faint);font-style:italic;}
+
+/* --- GENERIC GRIDS --- */
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:28px;}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:26px;}
+.grid-4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:22px;}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:28px;}
+.card .k{font-family:var(--font-mono);font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:var(--paper-faint);margin-bottom:10px;}
+.card .v{font-family:var(--font-mono);font-weight:600;font-size:32px;color:var(--paper);margin-bottom:10px;}
+.card .v.acc{color:var(--accent);}
+.card p{font-family:var(--font-display);font-size:15px;line-height:1.55;color:var(--paper-dim);}
+
+/* --- CHECKLIST --- */
+.neg-list{list-style:none;display:flex;flex-direction:column;gap:14px;}
+.neg-list li{display:flex;gap:20px;align-items:center;justify-content:space-between;background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:18px 24px;}
+.neg-list .txt{flex:1;}
+.neg-list p{font-family:var(--font-display);font-weight:600;font-size:19px;line-height:1.4;color:var(--paper);}
+.neg-list p .note{display:block;font-family:var(--font-mono);font-weight:400;font-size:13px;color:var(--paper-faint);margin-top:5px;}
+.neg-list .tags{display:flex;gap:8px;flex:none;}
+
+/* --- CONFIDENCE ROWS --- */
+.conf-row{display:flex;align-items:center;gap:24px;margin-bottom:22px;}
+.conf-row .label{width:460px;flex:none;font-family:var(--font-display);font-weight:600;font-size:19px;color:var(--paper);}
+.conf-row .label .sub{display:block;font-family:var(--font-mono);font-weight:400;font-size:13px;color:var(--paper-faint);margin-top:4px;}
+.conf-bar{flex:1;height:14px;background:var(--panel);border:1px solid var(--line);border-radius:2px;overflow:hidden;}
+.conf-fill{height:100%;background:var(--paper-dim);}
+
+/* --- RECOMMENDATIONS --- */
+.rec-col h3{font-family:var(--font-mono);font-size:14px;letter-spacing:0.12em;text-transform:uppercase;margin-bottom:18px;padding-bottom:12px;border-bottom:1px solid var(--line);color:var(--paper-dim);}
+.rec-col ol{list-style:none;counter-reset:rec;display:flex;flex-direction:column;gap:14px;}
+.rec-col li{counter-increment:rec;font-family:var(--font-display);font-size:16px;line-height:1.5;color:var(--paper-dim);position:relative;padding-left:32px;}
+.rec-col li::before{content:counter(rec);position:absolute;left:0;top:0;font-family:var(--font-mono);font-size:12px;color:var(--paper);background:var(--panel-2);border:1px solid var(--line);width:20px;height:20px;border-radius:2px;display:flex;align-items:center;justify-content:center;}
+.rec-col li b{color:var(--paper);}
+
+/* --- CLOSING --- */
+.close-wrap{display:flex;gap:56px;align-items:flex-start;}
+.close-left{flex:1.3;}
+.close-right{flex:1;display:flex;flex-direction:column;gap:14px;}
+
+/* Revised deck additions */
+.chapter-slide{position:absolute;}
+.grid-4 .card{min-width:0;}
+@media print{.grid-4{break-inside:avoid;}}
+</style>
+</head>
+<body>
+<div class="deck-viewport">
+<main class="deck-stage" id="deckStage"><section class="slide title-slide active">
+<div class="masthead reveal d1">
+<div class="masthead-left">Case File <b>· Vaultline Systems</b></div>
+<div class="masthead-right">SOC INVESTIGATION · TRAINING REVIEW<br/>REF: VAULTLINE‑2026</div>
+</div>
+<h1 class="title-h1 reveal d2">Anomalous Bulk Retrieval</h1>
+<div class="title-dek reveal d3">Two valid accounts. One external IP. <span class="mono acc">271</span> retrievals totalling <span class="mono acc">11.00 GiB</span>, across a <span class="mono">73‑day</span> window. This briefing is built in four chapters, one per investigator, and separates what the evidence shows from what it does not.</div>
+<div class="title-legend reveal d4">
+<div class="cap">Every claim in this deck is marked</div>
+<div class="row">
+<span class="tag proven">Proven</span>
+<span class="tag hypothesis">Hypothesis</span>
+<span class="tag unknown">Unknown</span>
+</div>
+</div>
+<div class="title-team reveal d5">
+<div class="who"><div class="ch">CH. 01 · OPENS &amp; CLOSES</div><div class="role">Case Lead</div><div class="name">Imri</div></div>
+<div class="who"><div class="ch">CH. 02</div><div class="role">Identity &amp; Access</div><div class="name">Yarin</div></div>
+<div class="who"><div class="ch">CH. 03</div><div class="role">Data &amp; Impact</div><div class="name">Alon</div></div>
+<div class="who"><div class="ch">CH. 04</div><div class="role">Intel &amp; Context</div><div class="name">Idan</div></div>
+</div>
+<div class="title-footer reveal d6">
+<span>LOG WINDOW: 09 SEP 00:00 → 24 NOV 11:58 UTC</span>
+<span>SOC ANALYST CERTIFICATION PROGRAM · 03 SEP 2026</span>
+</div>
+<div class="notes-content">
+<ul>
+<li><b>Open here.</b> Welcome the room, state the case reference (VAULTLINE-2026), and name the four chapters and presenters before diving in — it sets the expectation that this is a structured handoff, not one long narrative.</li>
+<li>Land the headline numbers early and precisely: <b>271 get_object retrievals, 11.00 GiB, one external IP (31.154.88.203), two valid accounts, 73 days</b> (09 Sep – 21 Nov 2026). Say the numbers slowly — they carry the whole case.</li>
+<li>Introduce the <b>evidentiary framework</b> up front: every claim in the deck is tagged Proven / Hypothesis / Unknown. Tell the audience this tagging is deliberate discipline, not decoration — it is how the team avoided over-claiming.</li>
+<li>Note who owns what: you (Imri) open with how the case arrived and the method, then hand to Yarin (Identity &amp; Access), Alon (Data &amp; Impact), and Idan (Intel &amp; Context) in turn, before you return at the end for the assessment and recommendations.</li>
+<li>Do not resolve the "third-party posting" claim yet — flag that it's coming immediately on the next slide, and that it is treated differently from everything else in the deck.</li>
+</ul>
+</div>
+</section><section class="slide chapter-slide">
+<div class="chapter-bg-grid"></div>
+<div class="chapter-num">01</div>
+<div class="chapter-main reveal d1">
+<div class="chapter-role">Case Lead</div>
+<div class="chapter-name">Imri</div>
+<div class="chapter-scope">Opens the case: how it arrived, what counts as evidence, and the method the team held itself to. Returns in the closing chapter to deliver the assessment and the recommendations.</div>
+</div>
+<div class="chapter-term reveal d2">
+<div class="line"><span class="prompt">&gt;</span> case_file --load vaultline-2026</div>
+<div class="line"><span class="prompt">&gt;</span> analyst: imri // case lead</div>
+<div class="line"><span class="prompt">&gt;</span> scope: origin, method, synthesis</div>
+<div class="line"><span class="prompt">&gt;</span> loading evidentiary framework...</div>
+<div class="line status"><span class="prompt">&gt;</span> status: ready</div>
+</div>
+<div class="chapter-index reveal d3"><div class="item"><div class="no">§ 03</div><div class="t">Origin of the case</div></div><div class="item"><div class="no">§ 04</div><div class="t">Evidence sources &amp; method</div></div><div class="item"><div class="no">§ 25–26</div><div class="t">Returns for: recommendations, severity &amp; close</div></div></div>
+<div class="notes-content">
+<ul>
+<li>This is a divider slide — pause here for a beat. Say plainly: "This is my chapter, and I'll be back at the end to close it out."</li>
+<li>Frame the two things you're covering right now: <b>where the case came from</b>, and <b>the rules the team followed</b> for what counts as proof.</li>
+<li>Transition line: "Before we get into who did what, you need to know what triggered this investigation — and, just as importantly, what didn't."</li>
+</ul>
+</div>
+</section><section class="slide">
+<div class="doc-header"><div class="doc-eyebrow ch">CH.01 · CASE LEAD <b>· Imri</b></div></div>
+<div class="content">
+<div class="kicker">Trigger <b>vs.</b> evidence — these are not the same thing</div>
+<h2 class="headline reveal d1">A customer reported archive records on a third‑party site. That claim never entered the evidence.</h2>
+<p class="lead reveal d2">No source. No link. No screenshot. It is the reason the case opened — and the last thing in this briefing treated as anything other than an allegation.</p>
+<div class="grid-2 reveal d3" style="margin-top:44px;">
+<div class="panel" style="padding:30px;">
+<div class="kicker" style="margin-bottom:14px;">Outside the evidence boundary</div>
+<ul style="font-family:var(--font-display);font-size:17px;color:var(--paper-dim);line-height:2.1;list-style:none;">
+<li>— That the third‑party posting exists at all</li>
+<li>— Any claim about who operated it</li>
+<li>— The word "attacker" applied to <span class="mono acc">31.154.88.203</span></li>
+</ul>
+<div style="margin-top:20px;"><span class="tag outside">outside evidence</span></div>
+</div>
+<div class="panel" style="padding:30px;">
+<div class="kicker" style="margin-bottom:14px;">What the case actually confirmed</div>
+<p style="font-family:var(--font-display);font-size:17px;color:var(--paper);line-height:1.7;">Sustained, anomalous bulk retrieval of customer data from the cloud tenant — confirmed independently from Cloud Audit, IAM, and VPN logs.</p>
+<div style="margin-top:20px;"><span class="tag proven">proven</span></div>
+</div>
+</div>
+<p class="lead reveal d4" style="margin-top:30px;max-width:1650px;">Everything from here forward is built on the right-hand box.</p>
+</div>
+<div class="doc-footer">
+<div class="legend"><span><span class="sw proven"></span>Proven</span><span><span class="sw hypothesis"></span>Hypothesis</span><span><span class="sw unknown"></span>Unknown</span></div>
+<div class="pageref">CASE <b>VAULTLINE‑2026</b> · 03 / 26</div>
+</div>
+<div class="notes-content">
+<ul>
+<li>Be explicit that the customer report is a <b>trigger</b>, not a <b>finding</b> — no source, link, or screenshot was ever supplied, and the team could not corroborate it.</li>
+<li>This is a credibility move: by drawing this line first, everything you say afterward is anchored to logs the team actually pulled, not to the unverified allegation that started the case.</li>
+<li>Preview forward without spoiling: "What we <i>did</i> find independently, across six separate log sources, is arguably worse than what the customer alleged — and that's the rest of this deck."</li>
+<li>If asked "so was the data actually leaked externally?" — the honest answer is: unknown, not disproven. Don't overstate the negative either.</li>
+</ul>
+</div>
+</section><section class="slide">
+<div class="doc-header"><div class="doc-eyebrow ch">CH.01 · CASE LEAD <b>· Imri</b></div></div>
+<div class="content">
+<div class="kicker">How a claim earns each label</div>
+<h2 class="headline reveal d1">Six sources, cross-read against each other. Claims stay inside the limits of the logs.</h2>
+<table class="data reveal d2" style="margin-top:36px;">
+<thead><tr><th style="width:22%;">Source</th><th>What it can show</th></tr></thead>
+<tbody>
+<tr><td class="mono">Cloud Audit</td><td>get_object / create_access_key / revoke_access_key events, byte counts, object paths</td></tr>
+<tr><td class="mono">IAM</td><td>Account &amp; access-key lifecycle for r.zohar, svc_archsync, a.perl, svc_integrity</td></tr>
+<tr><td class="mono">VPN Gateway</td><td>Logon events, TOTP challenge results, session duration</td></tr>
+<tr><td class="mono">Windows Event Log</td><td>Process, service &amp; scheduled-task creation on WKS‑ENG‑01, SRV‑BUILD</td></tr>
+<tr><td class="mono">Weblog</td><td>Reverse-checked for <span class="acc">31.154.88.203</span> traffic</td></tr>
+<tr><td class="mono">Backup job logs</td><td>Completion status across 103 scheduled jobs</td></tr>
+</tbody>
+</table>
+<div class="grid-3 reveal d3" style="margin-top:32px;">
+<div class="card"><div class="k">Proven</div><p>Shown directly by at least one primary source.</p></div>
+<div class="card"><div class="k">Hypothesis</div><p>Consistent with the evidence, not confirmed by a direct source.</p></div>
+<div class="card"><div class="k">Unknown</div><p>The sources available do not address the question either way.</p></div>
+</div>
+</div>
+<div class="doc-footer">
+<div class="legend"><span><span class="sw proven"></span>Proven</span><span><span class="sw hypothesis"></span>Hypothesis</span><span><span class="sw unknown"></span>Unknown</span></div>
+<div class="pageref">CASE <b>VAULTLINE‑2026</b> · 04 / 26</div>
+</div>
+<div class="notes-content"><ul>
+<li>Establish the six sources briefly; the goal is traceability, not reading the table.</li>
+<li>Explain the discipline precisely: a primary source can prove an event directly; the team then cross-read other sources wherever they could to test context, timing, and alternative explanations.</li>
+<li>Define the tags once: <b>Proven</b> = shown directly by a primary source; <b>Hypothesis</b> = consistent but not directly confirmed; <b>Unknown</b> = the available telemetry does not answer the question.</li>
+<li>Then show the case-at-a-glance slide before handing to Yarin.</li>
+</ul></div>
+</section><section class="slide">
+<div class="doc-header"><div class="doc-eyebrow ch">CH.01 · CASE LEAD <b>· Imri</b></div></div>
+<div class="content">
+<div class="kicker">Case in one view</div>
+<h2 class="headline reveal d1">The numbers are clear. The interpretation stays disciplined.</h2>
+<div class="grid-3 reveal d2" style="margin-top:36px;">
+<div class="card"><div class="k">Retrievals</div><div class="v acc">271</div><p>270 customer objects + 1 internal Critical config object.</p></div>
+<div class="card"><div class="k">Confirmed volume</div><div class="v acc">11.00 GiB</div><p>11,811,168,130 bytes · 11.81 GB decimal.</p></div>
+<div class="card"><div class="k">Accounts</div><div class="v">2</div><p><span class="mono">r.zohar</span> + <span class="mono">svc_archsync</span>.</p></div>
+<div class="card"><div class="k">External source</div><div class="v acc" style="font-size:27px;">31.154.88.203</div><p>Ownership remains unknown.</p></div>
+<div class="card"><div class="k">Suspicious window</div><div class="v">73 days</div><p>09 Sep → 21 Nov 2026.</p></div>
+<div class="card"><div class="k">Severity</div><div class="v">HIGH</div><p>Critical asset, customer data, duration, possible persistence.</p></div>
+</div>
+<div class="panel reveal d3" style="margin-top:28px;padding:22px 28px;display:flex;gap:32px;align-items:center;">
+<div style="font-family:var(--font-mono);font-size:12px;letter-spacing:.12em;color:var(--paper-faint);text-transform:uppercase;">Narrative map</div>
+<div style="font-family:var(--font-display);font-size:17px;color:var(--paper);line-height:1.55;">Yarin: <b>who &amp; when</b> → Alon: <b>how much &amp; impact</b> → Idan: <b>meaning, ATT&amp;CK &amp; confidence</b> → Imri: <b>actions &amp; close</b>.</div>
+</div>
+</div>
+<div class="doc-footer">
+<div class="legend"><span><span class="sw proven"></span>Proven</span><span><span class="sw hypothesis"></span>Hypothesis</span><span><span class="sw unknown"></span>Unknown</span></div>
+<div class="pageref">CASE <b>VAULTLINE‑2026</b> · 05 / 26</div>
+</div>
+<div class="notes-content"><ul><li>Use this as the 45-second map of the whole case: 271 retrievals, 11.00 GiB, two accounts, one external IP, 73 days, High severity.</li><li>Do not call the IP attacker-owned; the deck keeps ownership Unknown.</li><li>Use the narrative map at the bottom to hand cleanly to Yarin.</li></ul></div>
+</section><section class="slide chapter-slide">
+<div class="chapter-bg-grid"></div>
+<div class="chapter-num">02</div>
+<div class="chapter-main reveal d1">
+<div class="chapter-role">Identity &amp; Access</div>
+<div class="chapter-name">Yarin</div>
+<div class="chapter-scope">Covers both accounts end to end: their baselines, the moment each one breaks, the pivot between them, and the credential left standing at the end of the window.</div>
+</div>
+<div class="chapter-term reveal d2">
+<div class="line"><span class="prompt">&gt;</span> case_file --load vaultline-2026</div>
+<div class="line"><span class="prompt">&gt;</span> analyst: yarin // identity &amp; access</div>
+<div class="line"><span class="prompt">&gt;</span> accounts: r.zohar, svc_archsync</div>
+<div class="line"><span class="prompt">&gt;</span> sources: iam, vpn, cloud audit, edr</div>
+<div class="line status"><span class="prompt">&gt;</span> status: ready</div>
+</div>
+<div class="chapter-index reveal d3"><div class="item"><div class="no">§ 07</div><div class="t">Baselines: r.zohar &amp; svc_archsync</div></div><div class="item"><div class="no">§ 08–09</div><div class="t">Behavioural break &amp; the 40-minute VPN gap</div></div><div class="item"><div class="no">§ 10–12</div><div class="t">Pivot, persistence &amp; full timeline</div></div></div>
+<div class="notes-content">
+<ul>
+<li>Set the scope: "Everything in this chapter is about the two accounts — what normal looked like for each, and exactly where each one stopped behaving normally."</li>
+<li>Tell the audience this chapter is the longest, because it's the spine of the case — the volume and impact numbers in Alon's chapter, and the ATT&amp;CK mapping in Idan's, both hang off the events you're about to walk through.</li>
+</ul>
+</div>
+</section><section class="slide">
+<div class="doc-header"><div class="doc-eyebrow ch">CH.02 · IDENTITY &amp; ACCESS <b>· Yarin</b></div></div>
+<div class="content">
+<div class="kicker">27 Aug – 08 Sep 2026 <b>· before anything changes</b></div>
+<h2 class="headline reveal d1">Two accounts, two baselines. Both narrow. Both about to break.</h2>
+<p class="lead reveal d2">A human DevOps account with a small daily habit, and a service account with a purely internal replication loop — this is what "normal" looked like before 09 Sep.</p>
+<div class="bl-cols reveal d3" style="margin-top:36px;">
+<div class="bl-col">
+<h3>r.zohar</h3>
+<div class="sub">DevOps user · human account</div>
+<div class="bl-row"><div class="k">Operation</div><div class="v">get_object</div></div>
+<div class="bl-row"><div class="k">Target</div><div class="v">/internal/config/pipeline‑X.yaml</div></div>
+<div class="bl-row"><div class="k">Source IP</div><div class="v">212.117.55.9</div></div>
+<div class="bl-row"><div class="k">Times</div><div class="v">~07:12 &amp; ~08:18 UTC, daily</div></div>
+<div class="bl-row"><div class="k">Size</div><div class="v">14,000–14,500 bytes each</div></div>
+<div class="bl-foot"><span class="tag proven">proven</span></div>
+</div>
+<div class="bl-col">
+<h3>svc_archsync</h3>
+<div class="sub">Archive‑replication service account</div>
+<div class="bl-row"><div class="k">Operation</div><div class="v">replicate_object</div></div>
+<div class="bl-row"><div class="k">Target</div><div class="v">Internal objects only — a repeating loop, ~20 MB of genuinely unique data re‑fetched</div></div>
+<div class="bl-row"><div class="k">Source IPs</div><div class="v">10.90.4.11 · 10.90.4.12 · 10.90.5.11 (internal)</div></div>
+<div class="bl-row"><div class="k">Pattern</div><div class="v">Cyclical · purely internal, no external destination</div></div>
+<div class="bl-row"><div class="k">Volume</div><div class="v">~1.83 GiB cumulative · baseline noise</div></div>
+<div class="bl-foot"><span class="tag proven">proven</span></div>
+</div>
+</div>
+<p class="lead reveal d4" style="margin-top:26px;max-width:1700px;">This svc_archsync baseline is what breaks on <b>26 Sep, 21:00 UTC</b>, when the account makes its first-ever external retrieval — see §10.</p>
+</div>
+<div class="doc-footer">
+<div class="legend"><span><span class="sw proven"></span>Proven</span><span><span class="sw hypothesis"></span>Hypothesis</span><span><span class="sw unknown"></span>Unknown</span></div>
+<div class="pageref">CASE <b>VAULTLINE‑2026</b> · 07 / 26</div>
+</div>
+<div class="notes-content">
+<ul>
+<li>Present both baselines as a pair, not two unrelated facts — the whole rest of the chapter is "here's how each one deviates from what's on this slide."</li>
+<li>r.zohar: a small, boring, twice-daily pull of a ~14 KB config file from one IP. Say it plainly: "This is what a DevOps engineer's routine looks like when nothing is wrong."</li>
+<li>svc_archsync: emphasize it's <b>purely internal</b> before 26 Sep — three internal IPs (<span class="mono">10.90.4.11</span>, <span class="mono">10.90.4.12</span>, <span class="mono">10.90.5.11</span>), replicating within the tenant, never touching an external address. The ~1.83 GiB figure looks large, but it's a repeating loop re-fetching the same ~20 MB of unique data — that detail matters later when Alon separates it out of the impact total, so flag it now.</li>
+<li>Close the slide by pointing forward: this comparison is the reference point for the "first external call" moment coming up in a few slides — tell the room to remember these three internal IPs.</li>
+</ul>
+</div>
+</section><section class="slide">
+<div class="doc-header"><div class="doc-eyebrow ch">CH.02 · IDENTITY &amp; ACCESS <b>· Yarin</b></div></div>
+<div class="moment-header">
+<div class="kicker">Layered, not replaced</div>
+<h2 class="headline reveal d1">A second r.zohar pattern appears at 21:00 — and runs <i>alongside</i> the baseline.</h2>
+<p class="lead reveal d2" style="margin-top:14px;max-width:1660px;">From <span class="mono acc">31.154.88.203</span>: customer <span class="mono">record-XXXX.dat</span> objects, exactly <span class="mono">43,745,037 bytes</span> each, in evening bursts roughly every six minutes. The operator identity remains unknown.</p></div>
+<div class="moment-canvas reveal d2" style="top:350px;">
+<div class="lb-wrap">
+<div class="lb-lane">
+<div class="lb-lane-title"><div class="name">Morning baseline</div><div class="sub">r.zohar · 212.117.55.9<br/>pipeline‑X.yaml, ~14.2 KB</div></div>
+<div class="lb-track">
+<div class="lb-tick base" style="left:29%;"><span class="lb-tag-time">07:12</span></div>
+<div class="lb-tick base" style="left:34.5%;"><span class="lb-tag-time">08:18</span></div>
+</div>
+</div>
+<div class="lb-lane">
+<div class="lb-lane-title"><div class="name">Evening pattern — new</div><div class="sub"><span class="acc">31.154.88.203</span><br/>record‑XXXX.dat, every 6 min</div></div>
+<div class="lb-track">
+<div class="lb-band" style="left:87.5%;right:0;"></div>
+<div class="lb-tick anom" style="left:87.5%;"><span class="lb-tag-time acc">21:00</span></div>
+<div class="lb-tick anom" style="left:91%;"></div>
+<div class="lb-tick anom" style="left:94.5%;"></div>
+<div class="lb-tick anom" style="left:98%;"></div>
+</div>
+</div>
+<div class="lb-axis-row">
+<div class="lb-hour" style="left:0%;">00:00</div>
+<div class="lb-hour" style="left:25%;">06:00</div>
+<div class="lb-hour" style="left:50%;">12:00</div>
+<div class="lb-hour" style="left:75%;">18:00</div>
+<div class="lb-hour" style="left:96%;">24:00</div>
+</div>
+<div class="lb-repeat">
+<div class="label">REPEATS IN PARALLEL · 09 SEP → 21 NOV</div>
+<div class="days" id="lbDays"></div>
+</div>
+<div class="lb-note">
+<span class="tag unknown" style="flex:none;">unknown</span>
+<p>The layering is <b>proven</b>. It does not prove whether one operator or more than one was behind the two concurrent patterns.</p>
+</div>
+</div>
+</div>
+<div class="doc-footer">
+<div class="legend"><span><span class="sw proven"></span>Proven</span><span><span class="sw hypothesis"></span>Hypothesis</span><span><span class="sw unknown"></span>Unknown</span></div>
+<div class="pageref">CASE <b>VAULTLINE‑2026</b> · 08 / 26</div>
+</div>
+<div class="notes-content"><ul>
+<li>Contrast with §07: different target, different source IP, different time of day, and a perfectly fixed object size.</li>
+<li>The key point is not simply “anomaly”; it is <b>layering</b>. The normal morning baseline continues while the evening customer-data pattern runs beside it.</li>
+<li>Say explicitly: the pattern is Proven; who operated it is Unknown. Parallel patterns do not prove two people.</li>
+<li>Then move directly to the VPN timing test.</li>
+</ul></div>
+</section><section class="slide">
+<div class="doc-header"><div class="doc-eyebrow ch">CH.02 · IDENTITY &amp; ACCESS <b>· Yarin</b></div></div>
+<div class="moment-header">
+<div class="kicker">09 Sep 2026 · <b>21:00 → 21:40:01 UTC</b></div>
+<h2 class="headline reveal d1">Initial Access requires the access to precede the activity. Here, the order is reversed.</h2>
+</div>
+<div class="moment-canvas reveal d2">
+<div class="tl-wrap">
+<div class="tl-lane-label">Cloud retrieval<br/><b>31.154.88.203</b></div>
+<div class="tl-axis"></div>
+<div class="tl-tick" style="left:110px;"></div><div class="tl-tick" style="left:220px;"></div><div class="tl-tick" style="left:330px;"></div>
+<div class="tl-tick" style="left:440px;"></div><div class="tl-tick" style="left:550px;"></div><div class="tl-tick" style="left:660px;"></div>
+<div class="tl-tick" style="left:770px;"></div><div class="tl-tick" style="left:880px;"></div><div class="tl-tick" style="left:990px;"></div>
+<div class="tl-tick" style="left:1100px;"></div><div class="tl-tick" style="left:1210px;"></div><div class="tl-tick" style="left:1320px;"></div>
+<div class="tl-tick" style="left:1430px;"></div><div class="tl-tick" style="left:1540px;"></div>
+<div class="tl-node anom" style="left:110px;">
+<div class="dot"></div>
+<div class="time">21:00:00</div>
+<div class="label">Retrieval begins · get_object bursts, 6‑min interval</div>
+</div>
+<div class="tl-gap-bracket" style="left:110px;width:790px;"></div>
+<div class="tl-gap-label" style="left:505px;">40 MINUTES · NO VPN SESSION OPEN</div>
+<div class="tl-node anom" style="left:900px;">
+<div class="dot"></div>
+<div class="time">21:40:01</div>
+<div class="label">r.zohar VPN logon succeeds · same IP, TOTP, 195‑min session</div>
+</div>
+<div class="tl-callout">
+<span class="tag unknown" style="flex:none;">unknown — initial access</span>
+<p>Retrieval was already <b>40 minutes underway</b> when this VPN session opened. The sequence does not support calling it Initial Access — so the team did not.</p>
+</div>
+</div>
+</div>
+<div class="doc-footer">
+<div class="legend"><span><span class="sw proven"></span>Proven</span><span><span class="sw hypothesis"></span>Hypothesis</span><span><span class="sw unknown"></span>Unknown</span></div>
+<div class="pageref">CASE <b>VAULTLINE‑2026</b> · 09 / 26</div>
+</div>
+<div class="notes-content">
+<ul>
+<li>This is a discipline slide — it exists to show the audience the team resisted an obvious, tempting conclusion. Frame it that way: "It would have been easy to call this VPN logon the smoking gun. We didn't, and here's why."</li>
+<li>Walk the clock: retrieval starts <b>21:00:00</b>; the VPN logon — same IP, valid TOTP, 195-minute session — doesn't succeed until <b>21:40:01</b>. The cloud activity was already 40 minutes old.</li>
+<li>Spell out the logical consequence: whatever gave the operator access to r.zohar's cloud credentials at 21:00 was <i>not</i> this VPN session, because the session didn't exist yet. So how the operator got in initially is genuinely unknown — not a gap in the presentation, a gap in the evidence itself.</li>
+<li>If asked "could the VPN logon be unrelated?" — no, it's the same IP and account, so it's clearly part of the same episode; it just can't be the entry point.</li>
+<li>Hand off to the pivot: "So the account's cloud side is compromised or misused starting at 21:00. Three weeks later, a second account enters the picture."</li>
+</ul>
+</div>
+</section><section class="slide">
+<div class="doc-header"><div class="doc-eyebrow ch">CH.02 · IDENTITY &amp; ACCESS <b>· Yarin</b></div></div>
+<div class="content">
+<div class="kicker">24 Sep → 27 Oct 2026</div>
+<h2 class="headline reveal d1">Within three weeks, the incident pivots from r.zohar to svc_archsync.</h2>
+<div class="grid-4 reveal d2" style="margin-top:34px;">
+<div class="card" style="padding:22px;"><div class="k">24 Sep · 21:24 UTC</div><p class="mono" style="font-size:15px;color:var(--paper);line-height:1.55;">r.zohar → <span class="acc">archsync-runtime.yaml</span><br/>8,140 bytes · CLOUD-TENANT · Critical</p><div style="margin-top:14px;"><span class="tag hypothesis">Discovery hypothesis</span></div></div>
+<div class="card" style="padding:22px;"><div class="k">26 Sep · 19:30 UTC</div><p class="mono" style="font-size:15px;color:var(--paper);line-height:1.55;">svc_archsync<br/>WKS-ENG-01 → SRV-BUILD<br/>Type 3</p><div style="margin-top:14px;"><span class="tag hypothesis">anomalous source</span></div></div>
+<div class="card" style="padding:22px;border-color:var(--accent-line);"><div class="k">26 Sep · 21:00 UTC</div><p class="mono" style="font-size:15px;color:var(--paper);line-height:1.55;"><span class="acc">first-ever external</span><br/>svc_archsync get_object</p><div style="margin-top:14px;"><span class="tag proven">proven</span></div></div>
+<div class="card" style="padding:22px;"><div class="k">27 Oct · 20:36 UTC</div><p class="mono" style="font-size:15px;color:var(--paper);line-height:1.55;">second Type 3 logon<br/>same workstation → server path</p><div style="margin-top:14px;"><span class="tag proven">proven</span></div></div>
+</div>
+<div class="panel reveal d3" style="margin-top:26px;padding:22px 30px;display:flex;gap:22px;align-items:center;">
+<span class="tag unknown" style="flex:none;">telemetry gap</span>
+<p style="font-family:var(--font-mono);font-size:14px;color:var(--paper-dim);line-height:1.6;">EventCodes 4688 / 4697 / 7045 / 4698 / 4699 / 4702 returned no explanatory event on either host. Zero results ≠ proof of absence.</p>
+</div>
+</div>
+<div class="doc-footer">
+<div class="legend"><span><span class="sw proven"></span>Proven</span><span><span class="sw hypothesis"></span>Hypothesis</span><span><span class="sw unknown"></span>Unknown</span></div>
+<div class="pageref">CASE <b>VAULTLINE‑2026</b> · 10 / 26</div>
+</div>
+<div class="notes-content"><ul><li>Walk the four cards in order. The YAML retrieval is by r.zohar, not svc_archsync; content and use are Unknown, so it supports Discovery only as a hypothesis.</li><li>Type 3 itself is not suspicious for a service account; the anomaly is the source workstation WKS-ENG-01, associated with r.zohar, rather than approved infrastructure.</li><li>At 21:00 on 26 Sep, svc_archsync makes its first external get_object, a direct break from the purely internal baseline.</li><li>Be explicit about the telemetry gap: six relevant Windows EventCodes returned nothing, but that does not prove the activity never occurred.</li></ul></div>
+</section><section class="slide">
+<div class="doc-header"><div class="doc-eyebrow ch">CH.02 · IDENTITY &amp; ACCESS <b>· Yarin</b></div></div>
+<div class="moment-header">
+<div class="kicker">27 Oct 2026 · <b>22:09 UTC</b></div>
+<h2 class="headline reveal d1">A create with no revoke is a finding only because we know what a paired lifecycle looks like.</h2>
+</div>
+<div class="moment-canvas reveal d2">
+<div class="rv-cols">
+<div class="rv-col">
+<h3>a.perl — baseline pattern</h3>
+<div class="sub">Examined and ruled out of the incident path</div>
+<div class="rv-step"><div class="n">STEP 1</div><div><div class="op">revoke_access_key</div><div class="meta">old key retired first</div></div></div>
+<div class="rv-step"><div class="n">STEP 2</div><div><div class="op">create_access_key</div><div class="meta">new key issued after</div></div></div>
+<div class="rv-result"><span class="tag proven">paired — proven</span></div>
+</div>
+<div class="rv-col" style="border-color:var(--accent-line);">
+<h3>svc_archsync — the deviation</h3>
+<div class="sub">27 Oct 22:09 UTC · from <span class="acc">31.154.88.203</span></div>
+<div class="rv-step"><div class="n">STEP 1</div><div><div class="op acc">create_access_key</div><div class="meta">issued from the external IP</div></div></div>
+<div class="rv-step"><div class="n">STEP 2</div><div><div class="op" style="color:var(--paper-faint);">— no revoke found —</div><div class="meta">through data end, 24 Nov 11:58:39</div></div></div>
+<div class="rv-result"><span class="tag proven">unpaired — proven</span></div>
+</div>
+</div>
+<div class="rv-synth">
+<p>The unpaired create is anomalous only because the a.perl baseline shows what a correctly paired lifecycle looks like — the contrast is the finding.</p>
+</div>
+<div style="text-align:center;margin-top:20px;"><span class="tag unknown">whether the key is still valid — unknown</span></div>
+</div>
+<div class="doc-footer">
+<div class="legend"><span><span class="sw proven"></span>Proven</span><span><span class="sw hypothesis"></span>Hypothesis</span><span><span class="sw unknown"></span>Unknown</span></div>
+<div class="pageref">CASE <b>VAULTLINE‑2026</b> · 11 / 26</div>
+</div>
+<div class="notes-content">
+<ul>
+<li>Explain why a.perl is on this slide at all: it's the control group. a.perl was examined and ruled out of the incident entirely — its key rotation is shown purely to establish what "normal" access-key hygiene looks like in this tenant.</li>
+<li>Then contrast directly: svc_archsync's <span class="mono">create_access_key</span> on 27 Oct, issued from the same external IP that's been retrieving customer data, has <b>no matching revoke</b> anywhere in the data window — through the end of coverage on 24 Nov.</li>
+<li>Name the ATT&amp;CK technique out loud here even though Idan formalizes the full mapping later: this is Persistence, T1098.001 — Additional Cloud Credentials. It's the strongest single indicator that this isn't just data collection, it's an attempt to keep access.</li>
+<li>Be precise about the limits: the team cannot say whether that key is still valid today. "No revoke found in our data" is not the same as "still active" — the data window simply ends before any revoke, if one ever happened.</li>
+<li>This is a natural chapter-closing beat before the timeline recap — pause and let the room sit with "this may still be live" before moving on.</li>
+</ul>
+</div>
+</section><section class="slide">
+<div class="doc-header"><div class="doc-eyebrow ch">CH.02 · IDENTITY &amp; ACCESS <b>· Yarin</b></div></div>
+<div class="moment-header" style="top:110px;">
+<h2 class="headline reveal d1" style="font-size:38px;">Ten confirmed events. Seventy-three days. One continuous thread.</h2>
+<div class="kicker" style="margin-top:14px;margin-bottom:0;">27 Aug–08 Sep r.zohar baseline precedes this view (not shown to scale)</div>
+</div>
+<div class="moment-canvas reveal d2" style="top:236px;">
+<div class="ct-wrap" style="width:1720px;">
+<div class="ct-spine"></div>
+<div class="ct-node up anom" style="left:8%;"><div class="stem"></div><div class="dot"></div>
+<div class="card"><div class="t">09 SEP 21:00</div><div class="l">Evening pattern begins</div><span class="tagmini proven">proven</span></div>
+</div>
+<div class="ct-node down anom" style="left:17%;"><div class="stem"></div><div class="dot"></div>
+<div class="card"><div class="t">09 SEP 21:40</div><div class="l">r.zohar VPN logon, same IP</div><span class="tagmini unknown">not init. access</span></div>
+</div>
+<div class="ct-node up base" style="left:27%;"><div class="stem"></div><div class="dot"></div>
+<div class="card"><div class="t">24 SEP 21:24</div><div class="l">archsync‑runtime.yaml retrieved</div><span class="tagmini hypothesis">discovery</span></div>
+</div>
+<div class="ct-node down anom" style="left:36%;"><div class="stem"></div><div class="dot"></div>
+<div class="card"><div class="t">26 SEP 19:30</div><div class="l">Type 3 logon from workstation</div><span class="tagmini hypothesis">anomalous</span></div>
+</div>
+<div class="ct-node up anom" style="left:45%;"><div class="stem"></div><div class="dot"></div>
+<div class="card"><div class="t">26 SEP 21:00</div><div class="l">svc_archsync's first external call</div><span class="tagmini proven">proven</span></div>
+</div>
+<div class="ct-node down anom" style="left:55%;"><div class="stem"></div><div class="dot"></div>
+<div class="card"><div class="t">27 OCT 20:36</div><div class="l">Second workstation logon</div><span class="tagmini proven">proven</span></div>
+</div>
+<div class="ct-node up anom" style="left:64%;"><div class="stem"></div><div class="dot"></div>
+<div class="card"><div class="t">27 OCT 22:09</div><div class="l">create_access_key, no revoke</div><span class="tagmini proven">proven</span></div>
+</div>
+<div class="ct-node down anom" style="left:73%;"><div class="stem"></div><div class="dot"></div>
+<div class="card"><div class="t">19 NOV 21:48</div><div class="l">Last svc_archsync retrieval</div><span class="tagmini proven">proven</span></div>
+</div>
+<div class="ct-node up anom" style="left:83%;"><div class="stem"></div><div class="dot"></div>
+<div class="card"><div class="t">21 NOV 22:06</div><div class="l">Last suspicious retrieval overall</div><span class="tagmini proven">proven</span></div>
+</div>
+<div class="ct-node down boundary" style="left:92%;"><div class="stem"></div><div class="dot"></div>
+<div class="card" style="width:210px;"><div class="t">24 NOV 11:58</div><div class="l">Data coverage ends · no revoke found</div><span class="tagmini unknown">contained? unknown</span></div>
+</div>
+<div class="ct-caption">Nodes are spaced by sequence, not by elapsed time — see §09 for the one interval shown to true scale. 73 days runs 09 Sep 21:00 to 21 Nov 22:06.</div>
+</div>
+</div>
+<div class="doc-footer">
+<div class="legend"><span><span class="sw proven"></span>Proven</span><span><span class="sw hypothesis"></span>Hypothesis</span><span><span class="sw unknown"></span>Unknown</span></div>
+<div class="pageref">CASE <b>VAULTLINE‑2026</b> · 12 / 26</div>
+</div>
+<div class="notes-content">
+<ul>
+<li>This is your chapter-closing recap — run through it faster than the individual slides did, since the audience has already seen each event in detail. The value here is seeing all ten in one continuous line.</li>
+<li>Point out the tag mix deliberately: most nodes are proven, one is a hypothesis (the YAML discovery), and the endpoint is marked unknown — "we don't know if this is over." That mix is the honest state of the case, not a cliffhanger for effect.</li>
+<li>Reiterate the corrected day count if it comes up: the anomalous window runs 73 days, 09 Sep 21:00 to 21 Nov 22:06 — computed directly from the two confirmed timestamps, not an approximation.</li>
+<li>Hand off explicitly: "That's everything on who did what, and when. Alon is going to tell you exactly how much data moved, and what it did and didn't touch."</li>
+</ul>
+</div>
+</section><section class="slide chapter-slide">
+<div class="chapter-bg-grid"></div>
+<div class="chapter-num">03</div>
+<div class="chapter-main reveal d1">
+<div class="chapter-role">Data &amp; Impact</div>
+<div class="chapter-name">Alon</div>
+<div class="chapter-scope">Measures the confirmed retrieval volume, reconciles the byte count, separates baseline noise from incident impact, and defines exactly what the logs can and cannot tell us about affected data.</div>
+</div>
+<div class="chapter-term reveal d2">
+<div class="line"><span class="prompt">&gt;</span> case_file --load vaultline-2026</div>
+<div class="line"><span class="prompt">&gt;</span> analyst: alon // data &amp; impact</div>
+<div class="line"><span class="prompt">&gt;</span> sources: cloud audit, backup logs</div>
+<div class="line"><span class="prompt">&gt;</span> reconciling byte totals...</div>
+<div class="line status"><span class="prompt">&gt;</span> status: ready</div>
+</div>
+<div class="chapter-index reveal d3"><div class="item"><div class="no">§ 14</div><div class="t">Scope: what was retrieved</div></div><div class="item"><div class="no">§ 15–16</div><div class="t">Arithmetic reconciliation &amp; exclusions</div></div><div class="item"><div class="no">§ 17–18</div><div class="t">CIA impact &amp; impact boundary</div></div></div>
+<div class="notes-content">
+<ul>
+<li>Set the tone for a short, precise chapter: "Yarin told you who and when. I'm going to tell you exactly how much, and what it cost."</li>
+<li>Flag up front that one of the two numbers you're about to give corrects an error in an earlier draft of this report — it's worth being transparent that the original byte total was wrong and had to be recomputed, which is exactly what the next slide walks through.</li>
+</ul>
+</div>
+</section><section class="slide">
+<div class="doc-header"><div class="doc-eyebrow ch">CH.03 · DATA &amp; IMPACT <b>· Alon</b></div></div>
+<div class="content">
+<div class="kicker">Measured from Cloud Audit</div>
+<h2 class="headline reveal d1">271 anomalous retrievals: 270 customer objects plus one Critical config object.</h2>
+<div class="grid-4 reveal d2" style="margin-top:40px;">
+<div class="card"><div class="k">Anomalous calls</div><div class="v acc">271</div><p><span class="mono">get_object</span> operations confirmed in Cloud Audit.</p></div>
+<div class="card"><div class="k">Customer objects</div><div class="v">270</div><p>Across <b>24 customer namespaces</b>.</p></div>
+<div class="card"><div class="k">Critical config</div><div class="v">1</div><p><span class="mono">archsync-runtime.yaml</span> · 8,140 bytes.</p></div>
+<div class="card"><div class="k">Account split</div><div class="v" style="font-size:26px;">6.48 / 4.52</div><p>GiB via <span class="mono">r.zohar</span> / <span class="mono">svc_archsync</span>.</p></div>
+</div>
+<div class="panel reveal d3" style="margin-top:28px;padding:24px 30px;">
+<p style="font-family:var(--font-display);font-size:18px;color:var(--paper);line-height:1.6;">For <span class="mono">svc_archsync</span> specifically: <b>111 customer files</b>, from <span class="mono">cust-007</span> through <span class="mono">cust-024</span>. Keep the 24 customer namespaces separate from the one internal config object — it is not a “25th customer.”</p>
+</div>
+</div>
+<div class="doc-footer">
+<div class="legend"><span><span class="sw proven"></span>Proven</span><span><span class="sw hypothesis"></span>Hypothesis</span><span><span class="sw unknown"></span>Unknown</span></div>
+<div class="pageref">CASE <b>VAULTLINE‑2026</b> · 14 / 26</div>
+</div>
+<div class="notes-content"><ul><li>Start with scope, not arithmetic: 271 anomalous get_object calls; 270 customer objects across 24 customer namespaces; one 8,140-byte Critical config object.</li><li>Then give the account split: 6.48 GiB via r.zohar, 4.52 GiB via svc_archsync.</li><li>Call out that svc_archsync alone accounts for 111 customer files from cust-007 through cust-024.</li><li>Avoid saying “25 customer namespaces.” There are 24 customer namespaces plus one internal config object.</li></ul></div>
+</section><section class="slide">
+<div class="doc-header"><div class="doc-eyebrow ch">CH.03 · DATA &amp; IMPACT <b>· Alon</b></div></div>
+<div class="content">
+<div class="kicker">Arithmetic reconciliation</div>
+<h2 class="headline reveal d1">The 11.00 GiB total closes to the byte.</h2>
+<div class="panel reveal d2" style="margin-top:44px;padding:36px 42px;text-align:center;border-color:var(--accent-line);">
+<div style="font-family:var(--font-mono);font-size:28px;color:var(--paper);line-height:1.9;">
+<span class="acc">270</span> × 43,745,037 bytes + 8,140 bytes<br/>
+    = <b>11,811,168,130 bytes</b>
+</div>
+<div style="margin-top:18px;font-family:var(--font-mono);font-size:20px;color:var(--paper-dim);">= <span class="acc">11.00 GiB</span> binary · <span class="acc">11.81 GB</span> decimal</div>
+</div>
+<div class="grid-2 reveal d3" style="margin-top:28px;">
+<div class="card"><div class="k">Cross-check A</div><p><b>111</b> svc_archsync customer files × 43,745,037 bytes = about <b>4.52 GiB</b>.</p></div>
+<div class="card"><div class="k">Cross-check B</div><p>The remaining <b>159</b> customer files + the YAML object reconcile to about <b>6.48 GiB</b> via r.zohar.</p></div>
+</div>
+</div>
+<div class="doc-footer">
+<div class="legend"><span><span class="sw proven"></span>Proven</span><span><span class="sw hypothesis"></span>Hypothesis</span><span><span class="sw unknown"></span>Unknown</span></div>
+<div class="pageref">CASE <b>VAULTLINE‑2026</b> · 15 / 26</div>
+</div>
+<div class="notes-content"><ul><li>Walk the equation slowly: 270 customer retrievals at exactly 43,745,037 bytes each, then add the single 8,140-byte YAML object.</li><li>The result — 11,811,168,130 bytes — matches the Cloud Audit total exactly.</li><li>11.00 GiB and 11.81 GB are the same byte count expressed with binary and decimal units.</li><li>Use the account split as a second cross-check. The 159 count is derived as 270 minus 111; it is not a separately reported source field.</li></ul></div>
+</section><section class="slide">
+<div class="doc-header"><div class="doc-eyebrow ch">CH.03 · DATA &amp; IMPACT <b>· Alon</b></div></div>
+<div class="content">
+<div class="kicker">Scope control</div>
+<h2 class="headline reveal d1">What we excluded matters as much as what we counted.</h2>
+<div class="grid-2 reveal d2" style="margin-top:40px;">
+<div class="panel" style="padding:30px;">
+<div class="kicker" style="margin-bottom:12px;">Excluded from incident volume</div>
+<div class="v mono" style="font-size:30px;color:var(--paper);">~1.83 GiB</div>
+<p style="font-family:var(--font-display);font-size:17px;color:var(--paper-dim);line-height:1.7;margin-top:12px;">Internal <span class="mono">replicate_object</span> baseline traffic from svc_archsync. It predates the anomaly and repeatedly re-fetches roughly 20 MB of genuinely unique data.</p>
+<div style="margin-top:18px;"><span class="tag proven">baseline · excluded</span></div>
+</div>
+<div class="panel" style="padding:30px;">
+<div class="kicker" style="margin-bottom:12px;">Earlier draft · corrected</div>
+<p style="font-family:var(--font-display);font-size:22px;color:var(--paper);line-height:1.55;"><s style="color:var(--paper-faint);">110 objects / 11.26 GB</s></p>
+<p style="font-family:var(--font-display);font-size:17px;color:var(--paper-dim);line-height:1.7;margin-top:12px;">The <b>110</b> belonged to the internal replication baseline. The <b>11.26 GB</b> figure could not be reproduced. Neither belongs in incident impact.</p>
+<div style="margin-top:18px;"><span class="tag proven">reconciled</span></div>
+</div>
+</div>
+<div class="panel reveal d3" style="margin-top:26px;padding:22px 30px;text-align:center;"><p style="font-family:var(--font-display);font-size:18px;color:var(--paper);">Repeated internal traffic is not the same thing as unique data exposure. Counting it would inflate the incident.</p></div>
+</div>
+<div class="doc-footer">
+<div class="legend"><span><span class="sw proven"></span>Proven</span><span><span class="sw hypothesis"></span>Hypothesis</span><span><span class="sw unknown"></span>Unknown</span></div>
+<div class="pageref">CASE <b>VAULTLINE‑2026</b> · 16 / 26</div>
+</div>
+<div class="notes-content"><ul><li>Explain why the ~1.83 GiB internal replication loop is excluded: it is baseline behavior, internal only, and repeatedly fetches the same small set of unique data.</li><li>Then explain the corrected draft values. The 110 count came from the replication baseline, not the incident. 11.26 GB was not reproducible.</li><li>The point is scope hygiene: repeated baseline bytes must not be converted into incident loss.</li></ul></div>
+</section><section class="slide">
+<div class="doc-header"><div class="doc-eyebrow ch">CH.03 · DATA &amp; IMPACT <b>· Alon</b></div></div>
+<div class="content">
+<div class="kicker">What the available logs do — and do not — show</div>
+<h2 class="headline reveal d1">Confidentiality is affected; we found no integrity or availability impact in the available logs.</h2>
+<div class="grid-2 reveal d2" style="margin-top:48px;">
+<div class="panel" style="padding:34px;">
+<div class="k" style="font-family:var(--font-mono);font-size:13px;letter-spacing:0.1em;text-transform:uppercase;color:var(--paper-faint);margin-bottom:12px;">Availability</div>
+<div style="font-family:var(--font-mono);font-weight:600;font-size:30px;color:var(--paper);margin-bottom:10px;">103 / 103</div>
+<p style="font-family:var(--font-display);font-size:16px;color:var(--paper-dim);">Backup jobs completed SUCCESS across the entire window.</p>
+<div style="margin-top:18px;"><span class="tag proven">proven</span></div>
+</div>
+<div class="panel" style="padding:34px;">
+<div class="k" style="font-family:var(--font-mono);font-size:13px;letter-spacing:0.1em;text-transform:uppercase;color:var(--paper-faint);margin-bottom:12px;">Integrity</div>
+<div style="font-family:var(--font-mono);font-weight:600;font-size:30px;color:var(--paper);margin-bottom:10px;">0</div>
+<p style="font-family:var(--font-display);font-size:16px;color:var(--paper-dim);">delete_object operations found anywhere in the data.</p>
+<div style="margin-top:18px;"><span class="tag proven">proven</span></div>
+</div>
+</div>
+<p class="lead reveal d3" style="margin-top:32px;">The confirmed impact is loss of confidentiality: customer data plus internal operational configuration in a Critical environment.</p>
+</div>
+<div class="doc-footer">
+<div class="legend"><span><span class="sw proven"></span>Proven</span><span><span class="sw hypothesis"></span>Hypothesis</span><span><span class="sw unknown"></span>Unknown</span></div>
+<div class="pageref">CASE <b>VAULTLINE‑2026</b> · 17 / 26</div>
+</div>
+<div class="notes-content"><ul>
+<li>Availability: 103 of 103 backup jobs completed successfully across the window.</li>
+<li>Integrity: zero delete_object operations were found.</li>
+<li>Say this carefully: those are negative findings in the logs reviewed, not proof that no unlogged modification could have occurred.</li>
+<li>Therefore the confirmed impact is confidentiality loss, not a destructive or ransomware-style event.</li>
+</ul></div>
+</section><section class="slide">
+<div class="doc-header"><div class="doc-eyebrow ch">CH.03 · DATA &amp; IMPACT <b>· Alon</b></div></div>
+<div class="content">
+<div class="kicker">Impact boundary</div>
+<h2 class="headline reveal d1">We can measure the retrieval precisely. We cannot identify every affected person from these logs.</h2>
+<div class="grid-2 reveal d2" style="margin-top:42px;">
+<div class="panel" style="padding:32px;">
+<div class="kicker" style="margin-bottom:14px;">We can say</div>
+<ul style="font-family:var(--font-display);font-size:18px;color:var(--paper);line-height:2.0;list-style:none;">
+<li>— Exactly how many bytes were retrieved</li>
+<li>— Which 24 customer namespaces were touched</li>
+<li>— Which account performed each retrieval</li>
+<li>— When the suspicious retrieval window began and ended in our data</li>
+</ul>
+<div style="margin-top:18px;"><span class="tag proven">measurable</span></div>
+</div>
+<div class="panel" style="padding:32px;">
+<div class="kicker" style="margin-bottom:14px;">We cannot say from these logs</div>
+<ul style="font-family:var(--font-display);font-size:18px;color:var(--paper-dim);line-height:2.0;list-style:none;">
+<li>— What content was inside each object</li>
+<li>— Which individual data subjects are affected</li>
+<li>— Whether the customer-reported third-party posting is real</li>
+<li>— Whether the incident is contained after the data window</li>
+</ul>
+<div style="margin-top:18px;"><span class="tag unknown">requires more evidence</span></div>
+</div>
+</div>
+<div class="panel reveal d3" style="margin-top:26px;padding:22px 30px;"><p style="font-family:var(--font-display);font-size:18px;color:var(--paper);text-align:center;">That boundary is why Legal / Privacy involvement is a response requirement, not a presentation footnote.</p></div>
+</div>
+<div class="doc-footer">
+<div class="legend"><span><span class="sw proven"></span>Proven</span><span><span class="sw hypothesis"></span>Hypothesis</span><span><span class="sw unknown"></span>Unknown</span></div>
+<div class="pageref">CASE <b>VAULTLINE‑2026</b> · 18 / 26</div>
+</div>
+<div class="notes-content"><ul><li>This is the limit slide. Use “retrieved,” not “published” or “leaked to the third-party site.” The external publication claim was never verified.</li><li>You can defend the byte count, customer namespaces, accounts, and timing. You cannot identify object contents or every affected data subject from the available logs.</li><li>Tie that uncertainty directly to the Legal/Privacy recommendation.</li></ul></div>
+</section><section class="slide chapter-slide">
+<div class="chapter-bg-grid"></div>
+<div class="chapter-num">04</div>
+<div class="chapter-main reveal d1">
+<div class="chapter-role">Intel &amp; Context</div>
+<div class="chapter-name">Idan</div>
+<div class="chapter-scope">Turns the timeline into context: negative findings, ATT&amp;CK mapping, live hypotheses, open gaps, confidence, and the QA corrections that keep the report defensible.</div>
+</div>
+<div class="chapter-term reveal d2">
+<div class="line"><span class="prompt">&gt;</span> case_file --load vaultline-2026</div>
+<div class="line"><span class="prompt">&gt;</span> analyst: idan // intel &amp; context</div>
+<div class="line"><span class="prompt">&gt;</span> scope: attribution, framework, gaps, qa</div>
+<div class="line"><span class="prompt">&gt;</span> cross-referencing weblog, edr, iam...</div>
+<div class="line status"><span class="prompt">&gt;</span> status: ready</div>
+</div>
+<div class="chapter-index reveal d3"><div class="item"><div class="no">§ 20</div><div class="t">Negative findings</div></div><div class="item"><div class="no">§ 21–23</div><div class="t">ATT&amp;CK, hypotheses &amp; confidence</div></div><div class="item"><div class="no">§ 24</div><div class="t">QA and self-correction</div></div></div>
+<div class="notes-content">
+<ul>
+<li>Frame this as the "so what" chapter: "Yarin and Alon told you what happened and how much. My job is to tell you what it means, what it doesn't mean yet, and how much you should trust this report."</li>
+<li>This is the longest run of standalone topics — pace yourself; each slide is meant to stand on its own, so don't rush the negative findings just to get to the more dramatic assessment slide.</li>
+</ul>
+</div>
+</section><section class="slide">
+<div class="doc-header"><div class="doc-eyebrow ch">CH.04 · INTEL &amp; CONTEXT <b>· Idan</b></div></div>
+<div class="content">
+<div class="kicker">What the team looked for <b>and did not find</b></div>
+<h2 class="headline reveal d1">A negative result, checked and recorded, is still evidence.</h2>
+<ul class="neg-list reveal d2" style="margin-top:30px;">
+<li><div class="txt"><p>No brute-force or spray pattern<span class="note">Fits valid authentication material, source unknown</span></p></div><div class="tags"><span class="tag proven">proven</span></div></li>
+<li><div class="txt"><p>No VPN events for svc_archsync<span class="note">Its link to the IP comes only from Cloud Audit</span></p></div><div class="tags"><span class="tag proven">proven</span></div></li>
+<li><div class="txt"><p>IP never appears in Weblog<span class="note">No web-intrusion or proxy relay path proven</span></p></div><div class="tags"><span class="tag proven">proven</span></div></li>
+<li><div class="txt"><p>No role, policy, or group addition<span class="note">Privilege escalation not verified</span></p></div><div class="tags"><span class="tag proven">proven</span></div></li>
+<li><div class="txt"><p>a.perl &amp; svc_integrity ruled out<span class="note">Examined and excluded from the incident path</span></p></div><div class="tags"><span class="tag proven">proven</span></div></li>
+<li><div class="txt"><p>No process/service/task creation explains the logons<span class="note">Six EventCodes checked, all empty</span></p></div><div class="tags"><span class="tag proven">checked</span><span class="tag unknown">telemetry gap</span></div></li>
+</ul>
+</div>
+<div class="doc-footer">
+<div class="legend"><span><span class="sw proven"></span>Proven</span><span><span class="sw hypothesis"></span>Hypothesis</span><span><span class="sw unknown"></span>Unknown</span></div>
+<div class="pageref">CASE <b>VAULTLINE‑2026</b> · 20 / 26</div>
+</div>
+<div class="notes-content">
+<ul>
+<li>Open with why this slide exists: in most incident reports, "we didn't find X" gets left out entirely. Here it's deliberately documented, because ruling things out is exactly how the team narrowed from "could be anything" to a specific, bounded set of hypotheses.</li>
+<li>Two accounts were fully investigated and cleared: <b>a.perl</b> and <b>svc_integrity</b> — worth naming so the room knows the investigation wasn't limited to just the two accounts already discussed.</li>
+<li>No brute-force or password-spray signature anywhere — this is important: it means the evidence is consistent with the operator already possessing valid credentials, not guessing them.</li>
+<li>Highlight the one item that isn't a clean negative: the missing process/service/task telemetry for the svc_archsync logons is checked but inconclusive — six specific EventCodes returned nothing, and the team is explicit that absence of a log entry is not the same as absence of the underlying activity.</li>
+<li>Transition: "None of this tells us how they got in. What it does is let us map, cleanly, exactly which ATT&amp;CK techniques the remaining evidence actually supports."</li>
+</ul>
+</div>
+</section><section class="slide">
+<div class="doc-header"><div class="doc-eyebrow ch">CH.04 · INTEL &amp; CONTEXT <b>· Idan</b></div></div>
+<div class="content">
+<div class="kicker">Technique status <b>· only what the timeline supports</b></div>
+<h2 class="headline reveal d1">Three techniques. Two carry the same confidence as the raw events; one does not.</h2>
+<table class="data reveal d2" style="margin-top:44px;">
+<thead><tr><th style="width:16%;">Tactic</th><th style="width:34%;">Technique</th><th style="width:20%;">Status</th><th>Evidence</th></tr></thead>
+<tbody>
+<tr><td>Collection</td><td class="mono">T1530 — Data from Cloud Storage</td><td><span class="tag proven">proven</span></td><td class="mono">271 get_object retrievals, 11.00 GiB (§14–15)</td></tr>
+<tr><td>Persistence</td><td class="mono">T1098.001 — Additional Cloud Credentials</td><td><span class="tag proven">proven</span></td><td class="mono">create_access_key, 27 Oct, no paired revoke (§10)</td></tr>
+<tr><td>Discovery</td><td class="mono">T1083 — File &amp; Directory Discovery</td><td><span class="tag hypothesis">hypothesis</span></td><td class="mono">archsync‑runtime.yaml retrieval, 24 Sep (§10)</td></tr>
+</tbody>
+</table>
+<p class="lead reveal d3" style="margin-top:34px;">No technique for Initial Access, Privilege Escalation, or Execution is mapped — the evidence doesn't reach that far.</p>
+</div>
+<div class="doc-footer">
+<div class="legend"><span><span class="sw proven"></span>Proven</span><span><span class="sw hypothesis"></span>Hypothesis</span><span><span class="sw unknown"></span>Unknown</span></div>
+<div class="pageref">CASE <b>VAULTLINE‑2026</b> · 21 / 26</div>
+</div>
+<div class="notes-content">
+<ul>
+<li>This slide is deliberately short — three rows. Say why: "We only map a technique when the raw events actually support it. We are not going to pad this table to look more thorough than the evidence allows."</li>
+<li>Walk the three: Collection (T1530) and Persistence (T1098.001) carry <b>proven</b> status because they're backed directly by the events Yarin walked through. Discovery (T1083) stays a <b>hypothesis</b> because it rests on the YAML retrieval, whose contents and use are unknown.</li>
+<li>The most important line on this slide is the one at the bottom: no Initial Access, Privilege Escalation, or Execution technique is mapped at all. Say it plainly — "We are not filling that gap with a guess. It's blank because the evidence is blank."</li>
+<li>This sets up the next slide well: "Given only Collection and Persistence are solid, what's the most likely story that explains them? That's the assessment."</li>
+</ul>
+</div>
+</section><section class="slide">
+<div class="doc-header"><div class="doc-eyebrow ch">CH.04 · INTEL &amp; CONTEXT <b>· Idan</b></div></div>
+<div class="moment-header">
+<div class="kicker">Two explanations remain open — neither is confirmed</div>
+<h2 class="headline reveal d1">This reads as takeover or abuse of valid cloud accounts for collection — not a malware-proven intrusion.</h2>
+</div>
+<div class="moment-canvas reveal d2">
+<div class="rv-cols">
+<div class="rv-col">
+<h3>Credential compromise</h3>
+<div class="sub">Account takeover by an outside operator</div>
+<p class="txt">Valid, TOTP‑backed sessions and API calls from a single external IP, with <b>no brute‑force or spray signature</b> anywhere in the data — consistent with credentials that were obtained, not guessed.</p>
+<div class="rv-result"><span class="tag hypothesis">hypothesis</span></div>
+</div>
+<div class="rv-col">
+<h3>Insider misuse</h3>
+<div class="sub">Authorized access turned malicious</div>
+<p class="txt">svc_archsync's anomalous logons trace back to <b>r.zohar's own workstation</b>. Not excluded: authorized‑turned‑malicious insider use, possibly from an unmanaged personal device.</p>
+<div class="rv-result"><span class="tag hypothesis">hypothesis</span></div>
+</div>
+</div>
+<div class="rv-synth">
+<p>Both explanations remain open. The evidence does not resolve which is more likely, and the report makes no actor attribution.</p>
+</div>
+</div>
+<div class="doc-footer">
+<div class="legend"><span><span class="sw proven"></span>Proven</span><span><span class="sw hypothesis"></span>Hypothesis</span><span><span class="sw unknown"></span>Unknown</span></div>
+<div class="pageref">CASE <b>VAULTLINE‑2026</b> · 22 / 26</div>
+</div>
+<div class="notes-content"><ul>
+<li>Keep both columns explicitly as hypotheses. The report does not select or rank them.</li>
+<li>Credential compromise fits valid authentication material, valid TOTP, and the absence of brute-force or spray. It does not reveal how the credentials were obtained.</li>
+<li>Insider misuse remains possible because the svc_archsync logons trace to r.zohar's workstation; that fact also remains consistent with a compromised workstation.</li>
+<li>Do not attribute the event to a group, named attacker, or to r.zohar personally.</li>
+</ul></div>
+</section><section class="slide">
+<div class="doc-header"><div class="doc-eyebrow ch">CH.04 · INTEL &amp; CONTEXT <b>· Idan</b></div></div>
+<div class="content">
+<div class="kicker">What remains unresolved, stated plainly</div>
+<h2 class="headline reveal d1" style="font-size:40px;">Six open questions. Three confidence levels, not one.</h2>
+<div class="grid-3 reveal d2" style="margin-top:26px;">
+<div class="card" style="padding:18px 20px;"><p style="font-family:var(--font-display);color:var(--paper);font-size:15px;line-height:1.5;">How was the TOTP obtained, and by whom?</p><div style="margin-top:10px;"><span class="tag unknown">unknown</span></div></div>
+<div class="card" style="padding:18px 20px;"><p style="font-family:var(--font-display);color:var(--paper);font-size:15px;line-height:1.5;">Who owns <span class="acc mono">31.154.88.203</span>?</p><div style="margin-top:10px;"><span class="tag unknown">unknown</span></div></div>
+<div class="card" style="padding:18px 20px;"><p style="font-family:var(--font-display);color:var(--paper);font-size:15px;line-height:1.5;">What ran on the engineer's personal device?</p><div style="margin-top:10px;"><span class="tag unknown">unknown</span></div></div>
+<div class="card" style="padding:18px 20px;"><p style="font-family:var(--font-display);color:var(--paper);font-size:15px;line-height:1.5;">What was actually inside the retrieved objects?</p><div style="margin-top:10px;"><span class="tag unknown">unknown</span></div></div>
+<div class="card" style="padding:18px 20px;"><p style="font-family:var(--font-display);color:var(--paper);font-size:15px;line-height:1.5;">Is the third-party exposure real, on which site?</p><div style="margin-top:10px;"><span class="tag unknown">unknown</span></div></div>
+<div class="card" style="padding:18px 20px;"><p style="font-family:var(--font-display);color:var(--paper);font-size:15px;line-height:1.5;">Is the 27 Oct access key still valid today?</p><div style="margin-top:10px;"><span class="tag unknown">unknown</span></div></div>
+</div>
+<div class="reveal d3" style="margin-top:28px;">
+<div class="conf-row"><div class="label">Anomalous account use &amp; retrieval<span class="sub">confidence: medium‑high</span></div><div class="conf-bar"><div class="conf-fill" style="width:82%;"></div></div><span class="tag proven">proven</span></div>
+<div class="conf-row"><div class="label">Persistence via unrevoked key<span class="sub">confidence: medium</span></div><div class="conf-bar"><div class="conf-fill" style="width:56%;"></div></div><span class="tag hypothesis">hypothesis</span></div>
+<div class="conf-row"><div class="label">Initial access, actor identity, motive<span class="sub">confidence: low</span></div><div class="conf-bar"><div class="conf-fill" style="width:24%;"></div></div><span class="tag unknown">unknown</span></div>
+</div>
+</div>
+<div class="doc-footer">
+<div class="legend"><span><span class="sw proven"></span>Proven</span><span><span class="sw hypothesis"></span>Hypothesis</span><span><span class="sw unknown"></span>Unknown</span></div>
+<div class="pageref">CASE <b>VAULTLINE‑2026</b> · 23 / 26</div>
+</div>
+<div class="notes-content">
+<ul>
+<li>Read the six questions as a punch list for the next phase of investigation, not as loose ends of this presentation — each one maps to a specific piece of missing evidence named earlier in the deck (TOTP issuance, IP ownership records, the personal device, object contents, the third-party site, and the access key's current status).</li>
+<li>The confidence bars translate the whole case into three tiers: medium-high that the anomalous account use and retrieval happened at all (it's the best-evidenced claim in the case); medium that the unrevoked key represents real persistence (plausible, but the key's actual status is unverified); low on anything about who did this or why.</li>
+<li>Use this slide to push back gently on any pressure in the room to "just pick an answer" — say that stating confidence honestly, even when it's low, is more useful to whoever acts on this report than false certainty would be.</li>
+<li>Transition: "Before we close, I want to show you something unusual — this report checked its own work, and caught real mistakes. That's the last thing I want you to see before we hand back to Imri."</li>
+</ul>
+</div>
+</section><section class="slide">
+<div class="doc-header"><div class="doc-eyebrow ch">CH.04 · INTEL &amp; CONTEXT <b>· Idan</b></div></div>
+<div class="content">
+<div class="kicker">Our QA process, tested on our own report</div>
+<h2 class="headline reveal d1">Rigor isn't claimed here. It's demonstrated on this report's own mistakes.</h2>
+<div class="grid-3 reveal d2" style="margin-top:36px;">
+<div class="card" style="padding:22px;">
+<div class="k">Caught &amp; corrected</div>
+<p style="font-family:var(--font-display);font-size:15px;color:var(--paper);line-height:1.6;">Original claim: <s style="color:var(--paper-faint);">"110 objects / 11.26 GB."</s> Both wrong — 110 was the replicate_object unique-object count; 11.26 GB was unreproducible.</p>
+</div>
+<div class="card" style="padding:22px;">
+<div class="k">Caught &amp; corrected</div>
+<p style="font-family:var(--font-display);font-size:15px;color:var(--paper);line-height:1.6;">The YAML retrieval was misattributed to <b>svc_archsync</b> instead of <b>r.zohar</b> in an earlier draft.</p>
+</div>
+<div class="card" style="padding:22px;">
+<div class="k">Caught &amp; walked back</div>
+<p style="font-family:var(--font-display);font-size:15px;color:var(--paper);line-height:1.6;">An "attacker‑owned IP" claim was retracted for lack of ownership data.</p>
+</div>
+</div>
+<div class="panel reveal d3" style="margin-top:26px;padding:22px 30px;display:flex;gap:22px;align-items:center;border-color:var(--line);">
+<span class="tag unknown" style="flex:none;">unresolved</span>
+<p style="font-family:var(--font-display);font-size:16px;color:var(--paper-dim);line-height:1.6;">These fixes are reflected here — but the source report's other sections were left unreconciled. That must be resolved before any external distribution or regulatory decision.</p>
+</div>
+</div>
+<div class="doc-footer">
+<div class="legend"><span><span class="sw proven"></span>Proven</span><span><span class="sw hypothesis"></span>Hypothesis</span><span><span class="sw unknown"></span>Unknown</span></div>
+<div class="pageref">CASE <b>VAULTLINE‑2026</b> · 24 / 26</div>
+</div>
+<div class="notes-content">
+<ul>
+<li>Frame this as the strongest evidence of the team's rigor, not a confession — the source report went through an AI-assisted verification pass (its own Appendix A) that caught three real mistakes, and this deck reflects the corrected numbers throughout.</li>
+<li>Mistake 1: the Data &amp; Impact section originally said "110 objects / 11.26 GB." Both were wrong — 110 was actually the count of unique objects in the internal replicate_object baseline (Alon's ~1.83 GiB noise figure), not the incident total, and 11.26 GB couldn't be reproduced by re-running the calculation.</li>
+<li>Mistake 2: the archsync-runtime.yaml retrieval was originally attributed to svc_archsync; it was actually r.zohar (this deck states it correctly on §10).</li>
+<li>Mistake 3: an early draft called 31.154.88.203 "attacker-owned" — that claim was walked back because the team has no ownership data for the address at all. This is exactly the kind of overreach the Proven/Hypothesis/Unknown framework exists to prevent.</li>
+<li>Close with the honest caveat, don't soften it: the source report's corrections were applied to these specific facts, but Appendix A notes that other sections of the original document were left unreconciled. Say plainly that this must be cleaned up before the report goes anywhere external or to a regulator.</li>
+<li>Hand back cleanly: "That's context and intel. I'll hand it back to Imri to bring this to a close and tell you what needs to happen next."</li>
+</ul>
+</div>
+</section><section class="slide">
+<div class="doc-header"><div class="doc-eyebrow ch">CH.01 · CASE LEAD RETURNS <b>· Imri</b></div></div>
+<div class="content">
+<div class="kicker">Action, scaled to certainty</div>
+<h2 class="headline reveal d1" style="font-size:42px;">What follows from a High-severity case with a Low-confidence attacker profile.</h2>
+<div class="grid-3 reveal d2" style="margin-top:34px;">
+<div class="rec-col"><h3>Immediate · 24 hours</h3><ol>
+<li>Disable <b>r.zohar</b> and <b>svc_archsync</b>; revoke all sessions &amp; keys; reissue only after verifying owner and business need.</li>
+<li>Block or challenge <b>31.154.88.203</b> at VPN/Cloud enforcement — without pre-classifying it as attacker-owned.</li>
+<li>Preserve IAM/Cloud/VPN/EDR logs; open forensics on <b>WKS‑ENG‑01</b> &amp; <b>SRV‑BUILD</b>; loop in Legal/Privacy.</li>
+</ol></div>
+<div class="rec-col"><h3>Short term · 30 days</h3><ol>
+<li>Replace <b>svc_archsync</b> with a short-lived workload identity, restricted to approved infra, no interactive use.</li>
+<li>Alert on anomalous get_object volume, new external sources, and key creation without a revoke.</li>
+<li>Full permissions review of r.zohar / svc_archsync / a.perl; rotate every secret that may appear in archsync-runtime.yaml.</li>
+</ol></div>
+<div class="rec-col"><h3>Long term</h3><ol>
+<li>Phishing-resistant MFA for customer-data users; enforced BYOD policy; Conditional Access on managed devices.</li>
+<li>Extend retention/telemetry for IAM, Cloud, MFA, and service-account execution with a shared change identifier.</li>
+<li>Data classification &amp; DLP for customer archives; periodic audit of long-lived keys and service accounts.</li>
+</ol></div>
+</div>
+</div>
+<div class="doc-footer">
+<div class="legend"><span><span class="sw proven"></span>Proven</span><span><span class="sw hypothesis"></span>Hypothesis</span><span><span class="sw unknown"></span>Unknown</span></div>
+<div class="pageref">CASE <b>VAULTLINE‑2026</b> · 25 / 26</div>
+</div>
+<div class="notes-content">
+<ul>
+<li>Re-open as the returning case lead: "Thank you Yarin, Alon, and Idan. Given everything you just heard, here's what the team actually recommended — and the reasoning is the same discipline you've seen all deck: act decisively on what's proven, stay careful about what isn't."</li>
+<li>24-hour column: these are containment moves, not accusations. Disabling both accounts and revoking all sessions/keys is proportionate given the unrevoked key from §10 may still be live. Blocking the IP is deliberately paired with "without pre-classifying it as attacker-owned" — action doesn't require attribution.</li>
+<li>30-day column: this is where the specific findings turn into specific fixes — replacing svc_archsync with a short-lived workload identity directly answers the "service account logging on from a workstation" problem from §10, and the alerting rules are built directly from the behaviors this case exposed (anomalous volume, new external sources, unpaired key creation).</li>
+<li>Long-term column: phishing-resistant MFA and Conditional Access on managed devices speak directly to the two biggest open questions — how the TOTP was obtained, and what ran on the personal device.</li>
+<li>Keep the framing consistent to the end: severity is High because of the asset criticality, data sensitivity, duration, and possible persistence — not because the team is confident about who's responsible.</li>
+</ul>
+</div>
+</section><section class="slide">
+<div class="doc-header"><div class="doc-eyebrow ch">CH.01 · CASE LEAD RETURNS <b>· Imri</b></div></div>
+<div class="content">
+<div class="close-wrap reveal d1">
+<div class="close-left">
+<div class="kicker"><b>Severity: HIGH</b></div>
+<h2 class="headline" style="font-size:46px;">Critical asset. Customer data. Two accounts. 73 days. No real‑time alert fired.</h2>
+<p class="lead" style="margin-top:22px;max-width:1150px;">Decisions needed now: revoke credentials and sessions for both accounts; preserve IAM/Cloud/VPN/EDR evidence; open forensics on WKS‑ENG‑01 and SRV‑BUILD; rotate every secret in archsync-runtime.yaml; engage Legal/Privacy on customer notification.</p>
+</div>
+<div class="close-right">
+<div class="panel" style="padding:22px 26px;"><span class="tag proven">proven</span><p style="font-family:var(--font-mono);font-size:13px;color:var(--paper-faint);margin-top:10px;">Loss of confidentiality — customer data &amp; internal config</p></div>
+<div class="panel" style="padding:22px 26px;"><span class="tag unknown">unknown</span><p style="font-family:var(--font-mono);font-size:13px;color:var(--paper-faint);margin-top:10px;">Initial access, actor identity, whether the incident is contained</p></div>
+</div>
+</div>
+<div class="panel reveal d2" style="margin-top:24px;padding:22px 32px;text-align:center;">
+<p style="font-family:var(--font-display);font-weight:600;font-size:20px;color:var(--paper);">The finding here isn't only what we proved. It's what we had every reason to claim — and marked unknown instead.</p>
+</div>
+<p class="lead reveal d3" style="margin-top:18px;text-align:center;width:100%;">Discussion — Imri (Ch.01) · Yarin (Ch.02) · Alon (Ch.03) · Idan (Ch.04)</p>
+</div>
+<div class="doc-footer">
+<div class="legend"><span><span class="sw proven"></span>Proven</span><span><span class="sw hypothesis"></span>Hypothesis</span><span><span class="sw unknown"></span>Unknown</span></div>
+<div class="pageref">CASE <b>VAULTLINE‑2026</b> · 26 / 26</div>
+</div>
+<div class="notes-content">
+<ul>
+<li>Close the loop on the bookend structure explicitly: "I opened this deck by drawing a line between the unverified customer report and the evidence we actually confirmed. Everything since has stayed on the evidence side of that line."</li>
+<li>Restate severity and why: High is driven by asset criticality (a Critical-classified cloud environment), the sensitivity of customer data, a 73-day duration, two accounts, and a plausible persistence mechanism that was never observed to be revoked — not by confidence in an attacker profile, which stays deliberately low.</li>
+<li>Land the closing line as the actual thesis of the whole presentation: the discipline was in what the team refused to claim, not just what it proved. That's the training takeaway for the room, beyond this specific case.</li>
+<li>Open the floor by re-pointing to the right presenter for the right question: identity/access and timeline questions to Yarin, volume/impact questions to Alon, attribution/ATT&amp;CK/confidence questions to Idan, and anything about recommendations or next steps back to you.</li>
+</ul>
+</div>
+</section></main>
+</div>
+<!-- Edit affordance -->
+<div class="edit-hotzone" id="editHotzone"></div>
+<button class="edit-toggle" id="editToggle" title="Edit mode (E)">✎</button>
+<div class="edit-hint">Click text to edit · Ctrl+S to save</div>
+<!-- Speaker notes -->
+<button class="notes-toggle" id="notesToggle" title="Speaker notes (N)">NOTES · N</button>
+<div class="notes-drawer" id="notesDrawer">
+<div class="notes-inner">
+<div class="notes-head"><span>SPEAKER NOTES <b id="notesChapter"></b></span><span id="notesSlideNum"></span></div>
+<div class="notes-body" id="notesBody"></div>
+</div>
+</div>
+<!-- Progress / nav -->
+<div class="deck-controls" id="deckControls"></div>
+<script>
+/* ===========================================
+   INLINE EDITOR — toggles contenteditable on
+   text elements, autosaves to localStorage
+   =========================================== */
+class DeckEditor{
+  constructor(){
+    this.active=false;
+    this.selector='.slide h1,.slide h2,.slide h3,.slide p,.slide li,.slide td,.slide th,.slide .name,.slide .role,.slide .k,.slide .v,.slide .op,.slide .meta,.slide .label,.slide .sub,.slide .t,.slide .d,.slide .l,.slide .time,.slide .masthead-left,.slide .masthead-right,.slide .title-footer span,.slide .kicker,.slide .tag,.slide .tagmini,.slide .pageref,.slide .chapter-name,.slide .chapter-role,.slide .chapter-scope,.slide .chapter-term .line';
+    this.load();
+    this.bind();
+  }
+  bind(){
+    const toggle=document.getElementById('editToggle');
+    const hotzone=document.getElementById('editHotzone');
+    let hideTimeout=null;
+    toggle.addEventListener('click',()=>this.toggleEditMode());
+    hotzone.addEventListener('click',()=>this.toggleEditMode());
+    hotzone.addEventListener('mouseenter',()=>{clearTimeout(hideTimeout);toggle.classList.add('show');});
+    hotzone.addEventListener('mouseleave',()=>{hideTimeout=setTimeout(()=>{if(!this.active)toggle.classList.remove('show');},400);});
+    toggle.addEventListener('mouseenter',()=>clearTimeout(hideTimeout));
+    toggle.addEventListener('mouseleave',()=>{hideTimeout=setTimeout(()=>{if(!this.active)toggle.classList.remove('show');},400);});
+    document.addEventListener('keydown',(e)=>{
+      if(e.target&&e.target.getAttribute&&e.target.getAttribute('contenteditable'))return;
+      if(e.key==='e'||e.key==='E'){this.toggleEditMode();}
+      if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='s'){e.preventDefault();this.save();}
+    });
+  }
+  toggleEditMode(){
+    this.active=!this.active;
+    document.querySelectorAll(this.selector).forEach(el=>{el.contentEditable=this.active;});
+    document.getElementById('editToggle').classList.toggle('active',this.active);
+    document.getElementById('editToggle').classList.toggle('show',this.active);
+    document.body.classList.toggle('edit-mode',this.active);
+    if(!this.active)this.save();
+  }
+  save(){
+    try{localStorage.setItem('vaultline-deck-content-v4-revised',document.getElementById('deckStage').innerHTML);}catch(e){}
+  }
+  load(){
+    try{
+      const saved=localStorage.getItem('vaultline-deck-content-v4-revised');
+      if(saved)document.getElementById('deckStage').innerHTML=saved;
+    }catch(e){}
+  }
+}
+
+/* ===========================================
+   SPEAKER NOTES DRAWER
+   =========================================== */
+class NotesDrawer{
+  constructor(presentation){
+    this.presentation=presentation;
+    this.active=false;
+    this.drawer=document.getElementById('notesDrawer');
+    this.toggleBtn=document.getElementById('notesToggle');
+    this.body=document.getElementById('notesBody');
+    this.chapterEl=document.getElementById('notesChapter');
+    this.slideNumEl=document.getElementById('notesSlideNum');
+    this.toggleBtn.addEventListener('click',()=>this.toggle());
+    document.addEventListener('keydown',(e)=>{
+      if(e.target&&e.target.getAttribute&&e.target.getAttribute('contenteditable'))return;
+      if(e.key==='n'||e.key==='N'){this.toggle();}
+    });
+    this.update();
+  }
+  toggle(){
+    this.active=!this.active;
+    this.drawer.classList.toggle('open',this.active);
+    this.toggleBtn.classList.toggle('active',this.active);
+  }
+  update(){
+    const slide=this.presentation.slides[this.presentation.currentSlide];
+    const notes=slide.querySelector('.notes-content');
+    this.body.innerHTML=notes?notes.innerHTML:'<p style="color:var(--paper-faint);font-family:var(--font-mono);font-size:14px;">No notes for this slide.</p>';
+    const eyebrow=slide.querySelector('.doc-eyebrow,.chapter-role');
+    this.chapterEl.textContent=eyebrow?('&middot; '+eyebrow.textContent.trim()).replace('&middot;','·'):'';
+    this.slideNumEl.textContent=(this.presentation.currentSlide+1)+' / '+this.presentation.slides.length;
+  }
+}
+
+/* ===========================================
+   SLIDE PRESENTATION CONTROLLER
+   =========================================== */
+class SlidePresentation{
+  constructor(){
+    this.slides=document.querySelectorAll('.slide');
+    this.currentSlide=0;
+    this.stage=document.getElementById('deckStage');
+    this.chapterStartIndexes=[1,5,12,18];
+    this.buildDots();
+    this.setupStageScale();
+    this.setupKeyboardNav();
+    this.setupTouchNav();
+    this.setupWheelNav();
+    this.showSlide(0);
+  }
+  buildDots(){
+    const wrap=document.getElementById('deckControls');
+    this.dots=[];
+    this.slides.forEach((_,i)=>{
+      const b=document.createElement('button');
+      b.className='dot-nav'+(this.chapterStartIndexes.includes(i)?' chapter-start':'');
+      b.addEventListener('click',()=>this.showSlide(i));
+      wrap.appendChild(b);
+      this.dots.push(b);
+    });
+    const count=document.createElement('span');
+    count.className='nav-count';
+    count.id='navCount';
+    wrap.appendChild(count);
+  }
+  setupStageScale(){
+    const scale=()=>{
+      const f=Math.min(window.innerWidth/1920,window.innerHeight/1080);
+      const x=(window.innerWidth-1920*f)/2;
+      const y=(window.innerHeight-1080*f)/2;
+      this.stage.style.transform=`translate(${x}px,${y}px) scale(${f})`;
+    };
+    scale();window.addEventListener('resize',scale);
+  }
+  setupKeyboardNav(){
+    document.addEventListener('keydown',(e)=>{
+      if(e.target&&e.target.getAttribute&&e.target.getAttribute('contenteditable')==='true')return;
+      if(['ArrowRight','ArrowDown','PageDown',' '].includes(e.key)){e.preventDefault();this.next();}
+      if(['ArrowLeft','ArrowUp','PageUp'].includes(e.key)){e.preventDefault();this.prev();}
+      if(e.key==='Home'){this.showSlide(0);}
+      if(e.key==='End'){this.showSlide(this.slides.length-1);}
+    });
+  }
+  setupTouchNav(){
+    let sx=0;
+    this.stage.addEventListener('touchstart',(e)=>{sx=e.touches[0].clientX;},{passive:true});
+    this.stage.addEventListener('touchend',(e)=>{
+      const dx=e.changedTouches[0].clientX-sx;
+      if(Math.abs(dx)>50){dx<0?this.next():this.prev();}
+    },{passive:true});
+  }
+  setupWheelNav(){
+    let locked=false;
+    window.addEventListener('wheel',(e)=>{
+      if(locked)return;
+      if(Math.abs(e.deltaY)<30)return;
+      locked=true;
+      e.deltaY>0?this.next():this.prev();
+      setTimeout(()=>locked=false,700);
+    },{passive:true});
+  }
+  next(){this.showSlide(this.currentSlide+1);}
+  prev(){this.showSlide(this.currentSlide-1);}
+  showSlide(index){
+    this.currentSlide=Math.max(0,Math.min(index,this.slides.length-1));
+    this.slides.forEach((slide,i)=>{
+      slide.classList.toggle('active',i===this.currentSlide);
+      slide.classList.toggle('visible',i===this.currentSlide);
+    });
+    this.dots.forEach((d,i)=>d.classList.toggle('active',i===this.currentSlide));
+    document.getElementById('navCount').textContent=(this.currentSlide+1)+' / '+this.slides.length;
+    if(this.notes)this.notes.update();
+  }
+}
+
+/* Populate the parallel-repeat indicator on the layered-baseline slide */
+(function(){
+  const el=document.getElementById('lbDays');
+  if(el){for(let i=0;i<73;i++){const d=document.createElement('div');d.className='d';el.appendChild(d);}}
+})();
+
+const editor=new DeckEditor();
+const presentation=new SlidePresentation();
+presentation.notes=new NotesDrawer(presentation);
+presentation.notes.update();
+</script>
+</body>
+</html>
